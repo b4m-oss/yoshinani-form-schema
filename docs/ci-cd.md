@@ -8,7 +8,7 @@
 | --- | --- |
 | `develop` | 開発の最新。ここへの PR で CI |
 | `main` | 正。タグ打ちはここに取り込まれたコミットへ |
-| `release` | 公開ゲート。タグ先コミットがここに含まれているときだけ publish |
+| `release` | 公開ゲート。ここに main がマージされたとき CD が走る |
 
 ## CI（#37）
 
@@ -22,20 +22,20 @@ Workflow: [`.github/workflows/ci.yml`](../.github/workflows/ci.yml)
 Workflow: [`.github/workflows/cd-npm-publish.yml`](../.github/workflows/cd-npm-publish.yml)
 
 1. **タグは `main` に取り込まれたコミットへ打つ**（`release` では打たない）
-2. タグ push を契機に CD が動く
-3. 許可タグ: `^v[0-9]+\.[0-9]+\.[0-9]+$`（例: `v0.5.0`）
-4. **無視**: `v0.5.0-rc.1` など suffix 付き
-5. タグ先コミットが `origin/release` の祖先に含まれない場合は **publish せず失敗**
-6. `packages/yoshinani-form-schema/package.json` の `version` とタグ（`v` 除去）が一致必須
+2. **タグ push では publish しない**
+3. **`release` への push**（典型: main → release のマージ）を契機に CD が動く
+4. `packages/yoshinani-form-schema/package.json` の `version` が exact `X.Y.Z` であること（`-rc` 等はスキップ）
+5. 対応タグ `vX.Y.Z` が存在し、そのコミットが **release HEAD の祖先**であること
+6. 既に npm に同じバージョンがある場合は publish をスキップ
 
 ### 公開までの典型手順
 
 ```text
 develop で開発・CI
   → main へ取り込み
-  → 公開してよいコミットを release に反映（PR or fast-forward）
-  → main 上のそのコミットに vX.Y.Z をタグ付けして push
-  → CD が release ゲートを確認して npm publish
+  → main 上のそのコミットに vX.Y.Z をタグ付けして push（この時点では publish しない）
+  → main を release にマージ（PR）
+  → release への push で CD が動き、タグ／version ゲートを確認して npm publish
 ```
 
 ## Auth（#39）
@@ -46,8 +46,4 @@ develop で開発・CI
 
 ## 初回 0.5.0（#40）
 
-- git タグ `v0.5.0` は main に既存
-- `release` にそのコミットが含まれることを確認
-- 必要ならタグの再 push、または `release` 更新後に CD を `workflow_dispatch` なしで再発火させるため空コミットは使わず、手順どおりゲートを満たす
-
-公開後に README の「公開は後」注記を更新する（#40）。
+完了済み（`@b4moss/yoshinani-form-schema@0.5.0` 公開）。
