@@ -24,7 +24,8 @@
     "build": "vite build",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
-    "pack:check": "node scripts/pack-check.mjs"
+    "pack:check": "node scripts/pack-check.mjs",
+    "prepublishOnly": "npm run build"
   },
   "keywords": [
     "json-schema",
@@ -45,7 +46,8 @@
   },
   "homepage": "https://github.com/b4m-oss/yoshinani-form-schema#readme",
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   },
   "devDependencies": {
     "@types/node": "^26.1.2",
