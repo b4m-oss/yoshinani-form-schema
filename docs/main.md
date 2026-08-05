@@ -1,7 +1,10 @@
 # Yoshinani Form — 実現したい機能メモ
 
 > プロダクト構想のメモ。実装仕様・スキーマ仕様の確定稿ではない。
-> スキャフォールド時点の実装詳細より、ここに書く機能一覧を正とする。
+> 仕様の読み方:
+> - 語彙リファレンス: [`vocabulary.md`](./vocabulary.md)
+> - 素 Schema 推奨カタログ: [`json-schema-conventions.md`](./json-schema-conventions.md)
+> - 設計決定ログ: [`decisions.md`](./decisions.md)
 
 ## 大まかな機能
 

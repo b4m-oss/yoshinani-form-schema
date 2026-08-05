@@ -1,7 +1,9 @@
 # 設計決定メモ
 
 > 一問一答で確定した方針。実装仕様の詳細は後続で詰める。
-> 機能一覧のメモは [`docs/main.md`](./main.md) を参照。
+> - 機能一覧メモ: [`main.md`](./main.md)
+> - 語彙リファレンス: [`vocabulary.md`](./vocabulary.md)
+> - 素 Schema 推奨カタログ: [`json-schema-conventions.md`](./json-schema-conventions.md)
 
 ## リポジトリ責務
 
