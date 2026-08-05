@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "x-ys-text-count",
+  "description": "Controls whether a text count is displayed for a field.",
+  "type": "boolean"
+}
