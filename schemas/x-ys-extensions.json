@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://b4m.co.jp/schemas/yoshinani-form/meta/x-ys-extensions.json",
+  "title": "Yoshinani Form Schema Extensions (x-ys-*)",
+  "description": "Vocabulary definitions for Yoshinani form generator extensions.",
+  "$defs": {
+    "YsLayout": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "order": { "type": "integer" },
+        "width": { "type": "string" },
+        "group": { "type": "string" },
+        "section": { "type": "string" },
+        "hidden": { "type": "boolean" },
+        "inline": { "type": "boolean" },
+        "widget": { "type": "string" },
+        "colSpan": { "type": "integer", "minimum": 1 },
+        "rowSpan": { "type": "integer", "minimum": 1 },
+        "options": { "type": "object" }
+      }
+    },
+    "YsAssistMessage": {
+      "type": "object",
+      "required": ["message"],
+      "properties": {
+        "message": { "type": "string" },
+        "severity": { "type": "string", "enum": ["info", "tip", "warning"] },
+        "placement": { "type": "string", "enum": ["above", "below", "tooltip"] }
+      }
+    },
+    "YsAssist": {
+      "oneOf": [
+        { "type": "string" },
+        { "$ref": "#/$defs/YsAssistMessage" },
+        {
+          "type": "object",
+          "properties": {
+            "help": { "type": "string" },
+            "tip": { "type": "string" },
+            "example": { "type": "string" },
+            "messages": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/YsAssistMessage" }
+            }
+          }
+        }
+      ]
+    },
+    "YsErrorMessage": {
+      "oneOf": [
+        { "type": "string" },
+        {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        }
+      ]
+    },
+    "YsCrossValidationRule": {
+      "type": "object",
+      "required": ["assert", "message"],
+      "properties": {
+        "id": { "type": "string" },
+        "dependsOn": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "targets": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "assert": { "type": "object" },
+        "message": { "type": "string" }
+      }
+    },
+    "YsCrossValidation": {
+      "oneOf": [
+        { "$ref": "#/$defs/YsCrossValidationRule" },
+        {
+          "type": "array",
+          "items": { "$ref": "#/$defs/YsCrossValidationRule" }
+        }
+      ]
+    }
+  },
+  "properties": {
+    "x-ys-layout": { "$ref": "#/$defs/YsLayout" },
+    "x-ys-assist": { "$ref": "#/$defs/YsAssist" },
+    "x-ys-errorMessage": { "$ref": "#/$defs/YsErrorMessage" },
+    "x-ys-crossValidation": { "$ref": "#/$defs/YsCrossValidation" }
+  }
+}
