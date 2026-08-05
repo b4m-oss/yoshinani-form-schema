@@ -8,8 +8,8 @@ import {
 } from "./index.js";
 
 describe("constants", () => {
-  it("includes Japan lookup keywords at v0.5.0", () => {
-    expect(YS_VOCABULARY_VERSION).toBe("0.5.0");
+  it("includes Japan lookup keywords at v0.5.1", () => {
+    expect(YS_VOCABULARY_VERSION).toBe("0.5.1");
     expect(YS_KEYWORDS.postalLookup).toBe("x-ys-postal-lookup");
     expect(YS_KEYWORDS.addressLookup).toBe("x-ys-address-lookup");
     expect(YS_KEYWORDS.corporateNumberLookup).toBe(

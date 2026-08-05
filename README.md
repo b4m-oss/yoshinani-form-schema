@@ -27,7 +27,7 @@ npm install @b4moss/yoshinani-form-schema
 
 All Yoshinani keywords use **`x-ys-*`** in **kebab-case**.
 
-Through v0.5.0:
+Through v0.5.1:
 
 | Keyword | Purpose |
 | --- | --- |

@@ -5,7 +5,7 @@
 export const YS_PREFIX = "x-ys-" as const;
 
 /**
- * Well-known `x-ys-*` keyword names (through v0.5.0).
+ * Well-known `x-ys-*` keyword names (through v0.5.1).
  */
 export const YS_KEYWORDS = {
   version: "x-ys-version",
@@ -30,4 +30,4 @@ export type YsKeyword = (typeof YS_KEYWORDS)[keyof typeof YS_KEYWORDS];
 export const YS_KEYWORD_LIST: readonly YsKeyword[] = Object.values(YS_KEYWORDS);
 
 /** Current vocabulary version shipped by this package. */
-export const YS_VOCABULARY_VERSION = "0.5.0" as const;
+export const YS_VOCABULARY_VERSION = "0.5.1" as const;

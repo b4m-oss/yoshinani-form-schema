@@ -9,7 +9,7 @@
 - パッケージ: `@b4moss/yoshinani-form-schema`
 - 拡張接頭詞: `x-ys-*`（**kebab-case**）
 - ベース: JSON Schema **2020-12**
-- 現行語彙バージョン: **`0.5.0`**
+- 現行語彙バージョン: **`0.5.1`**
 - バリデーションは可能な限り素の JSON Schema。`x-ys-*` は標準で足りない関心だけ
 - 識別: パッケージ名 + 必須の `x-ys-version`（meta-schema `$id` は未設定）
 
@@ -36,11 +36,11 @@
 
 - **必須**（ルート）
 - 使用する語彙の SemVer 文字列
-- 例: `"0.5.0"`
+- 例: `"0.5.1"`
 
 ```json
 {
-  "x-ys-version": "0.5.0",
+  "x-ys-version": "0.5.1",
   "type": "object",
   "properties": {}
 }
@@ -315,7 +315,7 @@
 
 ```json
 {
-  "x-ys-version": "0.5.0",
+  "x-ys-version": "0.5.1",
   "type": "object",
   "required": ["email"],
   "properties": {

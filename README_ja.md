@@ -27,7 +27,7 @@ npm install @b4moss/yoshinani-form-schema
 
 すべての Yoshinani キーワードは **`x-ys-*`**（**kebab-case**）です。
 
-v0.5.0 まで:
+v0.5.1 まで:
 
 | キーワード | 用途 |
 | --- | --- |
