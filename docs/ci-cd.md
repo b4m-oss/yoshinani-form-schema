@@ -42,9 +42,7 @@ develop で開発・CI
 
 詳細手順: [`npm-auth.md`](./npm-auth.md)
 
-優先: **npm Trusted Publishing（OIDC）** / 予備: **`NPM_TOKEN` secret**
-
-Workflow は `cd-npm-publish.yml` で OIDC（`id-token: write`）と token 経路を分離済み。
+**`NPM_TOKEN` secret**（`hyogen-md` / `jp-local-gov-id` と同じ方式）。
 
 ## 初回 0.5.0（#40）
 

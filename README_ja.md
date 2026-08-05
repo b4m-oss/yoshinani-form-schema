@@ -11,7 +11,7 @@ Yoshinani フォームジェネレータ向けの JSON Schema 拡張（`x-ys-*`�
 - [docs/error-condition-ids.md](./docs/error-condition-ids.md) — エラー条件 ID 子集
 - [docs/pack-checklist.md](./docs/pack-checklist.md) — pack 確認（publish しない）
 - [docs/ci-cd.md](./docs/ci-cd.md) — CI / CD（Bパターン）と npm 認証
-- [docs/npm-auth.md](./docs/npm-auth.md) — Trusted Publishing / NPM_TOKEN 手順
+- [docs/npm-auth.md](./docs/npm-auth.md) — `NPM_TOKEN` 手順
 - [docs/decisions.md](./docs/decisions.md) — 設計決定ログ
 - [docs/main.md](./docs/main.md) — プロダクト機能メモ
 
