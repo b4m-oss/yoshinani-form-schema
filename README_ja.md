@@ -2,8 +2,6 @@
 
 Yoshinani フォームジェネレータ向けの JSON Schema 拡張（`x-ys-*`）です。
 
-標準の JSON Schema に加えて、**レイアウト**・**アシストメッセージ**・**エラーメッセージ**・**クロスバリデーション**を宣言できます。
-
 > English documentation: [README.md](./README.md)
 
 ## ドキュメント
@@ -19,56 +17,48 @@ Yoshinani フォームジェネレータ向けの JSON Schema 拡張（`x-ys-*`�
 npm install @b4moss/yoshinani-form-schema
 ```
 
+> npm 公開は git 上の語彙整備より後になることがあります。`0.1.0` 公開まではリポジトリ内の docs / `schemas/` を正としてください。
+
 ## 拡張プロパティ接頭詞
 
-すべての Yoshinani キーワードは **`x-ys-`** 接頭詞を使います。
+すべての Yoshinani キーワードは **`x-ys-*`**（**kebab-case**）です。
+
+v0.1.0 コア:
 
 | キーワード | 用途 |
 | --- | --- |
-| `x-ys-layout` | レイアウト / 表示ヒント（order, width, section, widget など） |
-| `x-ys-assist` | エラーではない案内（help, tip, example） |
-| `x-ys-errorMessage` | バリデーションキーワード別のエラー文言 |
-| `x-ys-crossValidation` | フィールド間バリデーション規則 |
+| `x-ys-version` | フォームルート必須の語彙 SemVer |
+| `x-ys-layout` | fieldset レイアウト（`type` / `legend` / `items`） |
+| `x-ys-assist` | アシストメッセージ（`string[]`） |
+| `x-ys-error-messages` | 条件 ID → 文言マップ |
+| `x-ys-cross-validate` | エラー表示側フィールドの `targets` |
 
 ## 例
 
-```json
-{
-  "type": "string",
-  "title": "メールアドレス",
-  "format": "email",
-  "x-ys-layout": { "order": 1, "width": "half", "widget": "email" },
-  "x-ys-assist": { "help": "返信先として使用します", "example": "yamada@example.com" },
-  "x-ys-errorMessage": {
-    "required": "メールアドレスを入力してください",
-    "format": "メールアドレスの形式が正しくありません"
-  }
-}
-```
-
-よりまとまった例は [`examples/contact.schema.json`](./examples/contact.schema.json)、語彙のスケッチは [`schemas/x-ys-extensions.json`](./schemas/x-ys-extensions.json) を参照してください。
-
-## API（TypeScript）
+[`examples/contact.schema.json`](./examples/contact.schema.json) と [`schemas/`](./schemas/) を参照してください。
 
 ```ts
 import {
   YS_KEYWORDS,
+  YS_VOCABULARY_VERSION,
   getYsExtensions,
-  normalizeCrossValidation,
   type YsJsonSchema,
 } from "@b4moss/yoshinani-form-schema";
 
 const schema: YsJsonSchema = {
+  "x-ys-version": YS_VOCABULARY_VERSION,
   type: "object",
   properties: {
-    email: { type: "string", "x-ys-layout": { width: "half" } },
+    email: {
+      type: "string",
+      "x-ys-assist": ["返信先として使用します"],
+    },
   },
+  "x-ys-layout": { type: "vertical", items: ["email"] },
 };
-
-const extensions = getYsExtensions(schema.properties!.email!);
 ```
 
-このスキャフォールドでは **型定義**・**キーワード定数**・**小さなヘルパー** を提供します。ランタイムのフォーム生成や検証エンジンは範囲外です。
+このパッケージは **型**・**キーワード定数**・**小さなヘルパー**・**JSON Schema スケッチ** を提供します。ランタイムのフォームエンジンは範囲外です。
 
 ## 開発
 

@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "x-ys-error-messages",
+  "description": "Maps condition identifiers to user-facing validation messages.",
+  "type": "object",
+  "additionalProperties": {
+    "type": "string"
+  }
+}
