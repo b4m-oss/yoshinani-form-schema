@@ -17,11 +17,11 @@
 
 | ファイル | 内容 |
 | --- | --- |
-| [`examples/contact.schema.json`](../examples/contact.schema.json) | お問い合わせ（layout / assist / error / cross-validate / flow / step-nav / terms など） |
-| [`examples/structured-inputs.schema.json`](../examples/structured-inputs.schema.json) | 配列・ファイル（`x-ys-array` / `x-ys-file`） |
-| [`examples/japan-lookups.schema.json`](../examples/japan-lookups.schema.json) | 郵便・住所・法人番号 lookup |
+| [`examples/contact.schema.json`](../packages/yoshinani-form-schema/examples/contact.schema.json) | お問い合わせ（layout / assist / error / cross-validate / flow / step-nav / terms など） |
+| [`examples/structured-inputs.schema.json`](../packages/yoshinani-form-schema/examples/structured-inputs.schema.json) | 配列・ファイル（`x-ys-array` / `x-ys-file`） |
+| [`examples/japan-lookups.schema.json`](../packages/yoshinani-form-schema/examples/japan-lookups.schema.json) | 郵便・住所・法人番号 lookup |
 
-スキーマ断片: [`schemas/`](../schemas/)（入口は `x-ys-extensions.json`）。
+スキーマ断片: [`schemas/`](../packages/yoshinani-form-schema/schemas/)（入口は `x-ys-extensions.json`）。
 
 ## 付与場所
 

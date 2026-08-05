@@ -1,15 +1,16 @@
 name: CD npm publish
 
 # B-pattern:
-# - Tags are created on commits already on main (not on release).
-# - Publish runs on tag push only when that commit is contained in `release`.
-# - Exact tags only: vX.Y.Z (no -rc / +build suffixes).
+# - Tags are created on commits already on main (not on release). Tag push does NOT publish.
+# - Publish runs when `release` is updated (typically after merging main into release).
+# - Gates: package.json version is exact X.Y.Z, matching tag vX.Y.Z exists on an ancestor of HEAD.
 # Auth: repository secret NPM_TOKEN (same as other @b4moss repos).
+# Package lives under packages/yoshinani-form-schema.
 
 on:
   push:
-    tags:
-      - "v*"
+    branches:
+      - release
 
 permissions:
   contents: read
@@ -19,70 +20,86 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: packages/yoshinani-form-schema
     steps:
-      - name: Validate tag name
-        id: tag
-        run: |
-          TAG="${GITHUB_REF_NAME}"
-          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
-          if [[ ! "${TAG}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            echo "Skipping publish: tag '${TAG}' is not an exact vX.Y.Z (suffix tags are ignored)."
-            echo "should_publish=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          echo "should_publish=true" >> "$GITHUB_OUTPUT"
-          echo "version=${TAG#v}" >> "$GITHUB_OUTPUT"
-
       - name: Checkout
-        if: steps.tag.outputs.should_publish == 'true'
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Verify commit is on release
-        if: steps.tag.outputs.should_publish == 'true'
+      - name: Resolve version and verify tag gate
+        id: gate
+        working-directory: .
         run: |
           set -euo pipefail
-          git fetch origin release:refs/remotes/origin/release
-          TAG_COMMIT="$(git rev-list -n 1 "${GITHUB_REF_NAME}")"
-          if ! git merge-base --is-ancestor "${TAG_COMMIT}" origin/release; then
-            echo "::error::Tag ${GITHUB_REF_NAME} (${TAG_COMMIT}) is not contained in origin/release. Refusing to publish (B-pattern gate)."
+          PKG_VERSION="$(node -p "require('./packages/yoshinani-form-schema/package.json').version")"
+          echo "version=${PKG_VERSION}" >> "$GITHUB_OUTPUT"
+
+          if [[ ! "${PKG_VERSION}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Skipping publish: package.json version '${PKG_VERSION}' is not exact X.Y.Z (suffix versions are ignored)."
+            echo "should_publish=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          TAG="v${PKG_VERSION}"
+          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+
+          if ! git rev-parse -q --verify "refs/tags/${TAG}" >/dev/null; then
+            # Tags may not be present on a shallow/default fetch of the branch tip alone.
+            git fetch origin "refs/tags/${TAG}:refs/tags/${TAG}" 2>/dev/null || true
+          fi
+          if ! git rev-parse -q --verify "refs/tags/${TAG}" >/dev/null; then
+            echo "::error::Tag ${TAG} not found. Tag the main commit before merging into release."
             exit 1
           fi
-          echo "Tag commit ${TAG_COMMIT} is on release."
+
+          TAG_COMMIT="$(git rev-list -n 1 "${TAG}")"
+          if ! git merge-base --is-ancestor "${TAG_COMMIT}" HEAD; then
+            echo "::error::Tag ${TAG} (${TAG_COMMIT}) is not contained in release HEAD (${GITHUB_SHA}). Refusing to publish."
+            exit 1
+          fi
+
+          echo "should_publish=true" >> "$GITHUB_OUTPUT"
+          echo "Tag ${TAG} (${TAG_COMMIT}) is on release; publishing ${PKG_VERSION}."
 
       - name: Setup Node.js
-        if: steps.tag.outputs.should_publish == 'true'
+        if: steps.gate.outputs.should_publish == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: "22"
           cache: npm
+          cache-dependency-path: packages/yoshinani-form-schema/package-lock.json
           registry-url: https://registry.npmjs.org
 
       - name: Install
-        if: steps.tag.outputs.should_publish == 'true'
+        if: steps.gate.outputs.should_publish == 'true'
         run: npm ci
 
-      - name: Verify package.json version matches tag
-        if: steps.tag.outputs.should_publish == 'true'
+      - name: Skip if version already on npm
+        if: steps.gate.outputs.should_publish == 'true'
+        id: npm
         run: |
           set -euo pipefail
-          PKG_VERSION="$(node -p "require('./package.json').version")"
-          TAG_VERSION="${{ steps.tag.outputs.version }}"
-          if [[ "${PKG_VERSION}" != "${TAG_VERSION}" ]]; then
-            echo "::error::package.json version (${PKG_VERSION}) != tag version (${TAG_VERSION})"
-            exit 1
+          NAME="$(node -p "require('./package.json').name")"
+          VERSION="${{ steps.gate.outputs.version }}"
+          if npm view "${NAME}@${VERSION}" version >/dev/null 2>&1; then
+            echo "Skip publish: ${NAME}@${VERSION} already on npm"
+            echo "already_published=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "already_published=false" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Test / typecheck / build
-        if: steps.tag.outputs.should_publish == 'true'
+        if: steps.gate.outputs.should_publish == 'true' && steps.npm.outputs.already_published != 'true'
         run: |
           npm test
           npm run typecheck
           npm run build
 
       - name: Publish to npm
-        if: steps.tag.outputs.should_publish == 'true'
+        if: steps.gate.outputs.should_publish == 'true' && steps.npm.outputs.already_published != 'true'
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
