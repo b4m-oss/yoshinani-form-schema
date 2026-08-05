@@ -40,25 +40,11 @@ develop で開発・CI
 
 ## Auth（#39）
 
-優先: **npm Trusted Publishing（OIDC）**
+詳細手順: [`npm-auth.md`](./npm-auth.md)
 
-### Trusted Publishing 設定（PO / npmjs.com）
+優先: **npm Trusted Publishing（OIDC）** / 予備: **`NPM_TOKEN` secret**
 
-1. https://www.npmjs.com/ にログイン（org `@b4moss`）
-2. パッケージ作成前なら、初回 publish 用に Trusted Publisher を「GitHub Actions」で予約、または初回だけ token で作成してから接続
-3. GitHub repository: `b4m-oss/yoshinani-form-schema`
-4. Workflow filename: `cd-npm-publish.yml`
-5. Environment は未使用（空で可）
-
-Workflow 側は `permissions.id-token: write` 済み。
-
-### フォールバック: `NPM_TOKEN`
-
-Trusted Publishing が使えない場合（iPad で設定不可など）:
-
-1. npm で Granular Access Token（Automation / publish 権限）を発行
-2. GitHub repo Secrets に `NPM_TOKEN` を登録
-3. CD は `NODE_AUTH_TOKEN` があるとき token 経路で publish
+Workflow は `cd-npm-publish.yml` で OIDC（`id-token: write`）と token 経路を分離済み。
 
 ## 初回 0.5.0（#40）
 
