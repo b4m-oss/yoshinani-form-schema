@@ -1,17 +1,27 @@
 import type { YsAssist } from "./assist.js";
 import type { YsCrossValidate } from "./cross-validate.js";
+import type { YsDisableOnSubmit } from "./disable-on-submit.js";
 import type { YsErrorMessages } from "./error-messages.js";
+import type { YsFlow } from "./flow.js";
 import type { YsLayout } from "./layout.js";
+import type { YsStepNav } from "./step-nav.js";
+import type { YsTerms } from "./terms.js";
+import type { YsTextCount } from "./text-count.js";
 import type { YsVersion } from "./version.js";
 
 export type { YsAssist } from "./assist.js";
 export type { YsCrossValidate } from "./cross-validate.js";
+export type { YsDisableOnSubmit } from "./disable-on-submit.js";
 export type { YsErrorMessages } from "./error-messages.js";
+export type { YsFlow, YsFlowScreen } from "./flow.js";
 export type { YsLayout, YsLayoutType } from "./layout.js";
+export type { YsStepNav } from "./step-nav.js";
+export type { YsTerms } from "./terms.js";
+export type { YsTextCount } from "./text-count.js";
 export type { YsVersion } from "./version.js";
 
 /**
- * Yoshinani extension bag (v0.1.0 core) that may appear on schema nodes.
+ * Yoshinani extension bag (through v0.2.0) that may appear on schema nodes.
  */
 export interface YsExtensions {
   "x-ys-version"?: YsVersion;
@@ -19,6 +29,11 @@ export interface YsExtensions {
   "x-ys-assist"?: YsAssist;
   "x-ys-error-messages"?: YsErrorMessages;
   "x-ys-cross-validate"?: YsCrossValidate;
+  "x-ys-flow"?: YsFlow;
+  "x-ys-step-nav"?: YsStepNav;
+  "x-ys-terms"?: YsTerms;
+  "x-ys-text-count"?: YsTextCount;
+  "x-ys-disable-on-submit"?: YsDisableOnSubmit;
 }
 
 /**

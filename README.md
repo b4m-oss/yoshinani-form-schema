@@ -23,7 +23,7 @@ npm install @b4moss/yoshinani-form-schema
 
 All Yoshinani keywords use **`x-ys-*`** in **kebab-case**.
 
-v0.1.0 core:
+Through v0.2.0:
 
 | Keyword | Purpose |
 | --- | --- |
@@ -32,6 +32,11 @@ v0.1.0 core:
 | `x-ys-assist` | Assist messages (`string[]`) |
 | `x-ys-error-messages` | Error copy map keyed by condition IDs |
 | `x-ys-cross-validate` | Cross-field targets on the error-displaying field |
+| `x-ys-flow` | Screen model (`screens`: `id` + `role`) |
+| `x-ys-step-nav` | Placeable step navigation flag |
+| `x-ys-terms` | Root terms consent setting |
+| `x-ys-text-count` | Text count display on/off |
+| `x-ys-disable-on-submit` | Disable control after submit |
 
 ## Example
 
