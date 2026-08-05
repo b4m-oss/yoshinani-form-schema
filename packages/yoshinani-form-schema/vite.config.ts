@@ -11,6 +11,7 @@ export default defineConfig({
     }),
   ],
   build: {
+    minify: true,
     lib: {
       entry: resolve(import.meta.dirname, "src/index.ts"),
       name: "YoshinaniFormSchema",

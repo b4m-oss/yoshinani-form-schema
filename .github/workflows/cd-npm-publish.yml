@@ -5,6 +5,7 @@ name: CD npm publish
 # - Publish runs on tag push only when that commit is contained in `release`.
 # - Exact tags only: vX.Y.Z (no -rc / +build suffixes).
 # Auth: repository secret NPM_TOKEN (same as other @b4moss repos).
+# Package lives under packages/yoshinani-form-schema.
 
 on:
   push:
@@ -19,9 +20,13 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: packages/yoshinani-form-schema
     steps:
       - name: Validate tag name
         id: tag
+        working-directory: .
         run: |
           TAG="${GITHUB_REF_NAME}"
           echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
@@ -41,6 +46,7 @@ jobs:
 
       - name: Verify commit is on release
         if: steps.tag.outputs.should_publish == 'true'
+        working-directory: .
         run: |
           set -euo pipefail
           git fetch origin release:refs/remotes/origin/release
@@ -57,6 +63,7 @@ jobs:
         with:
           node-version: "22"
           cache: npm
+          cache-dependency-path: packages/yoshinani-form-schema/package-lock.json
           registry-url: https://registry.npmjs.org
 
       - name: Install
