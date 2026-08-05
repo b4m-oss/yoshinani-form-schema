@@ -1,9 +1,13 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "お問い合わせ",
-  "x-ys-version": "0.2.0",
+  "x-ys-version": "0.3.0",
   "type": "object",
-  "required": ["email", "emailConfirm", "message"],
+  "required": [
+    "email",
+    "emailConfirm",
+    "message"
+  ],
   "properties": {
     "stepNavTop": {
       "x-ys-step-nav": true
@@ -29,7 +33,9 @@
         "確認のため、もう一度入力してください"
       ],
       "x-ys-cross-validate": {
-        "targets": ["email"]
+        "targets": [
+          "email"
+        ]
       },
       "x-ys-error-messages": {
         "required": "確認用メールアドレスを入力してください",
@@ -67,9 +73,18 @@
   },
   "x-ys-flow": {
     "screens": [
-      { "id": "input", "role": "form" },
-      { "id": "confirm", "role": "confirm" },
-      { "id": "done", "role": "complete" }
+      {
+        "id": "input",
+        "role": "form"
+      },
+      {
+        "id": "confirm",
+        "role": "confirm"
+      },
+      {
+        "id": "done",
+        "role": "complete"
+      }
     ]
   },
   "x-ys-terms": {
