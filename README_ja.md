@@ -10,6 +10,7 @@ Yoshinani フォームジェネレータ向けの JSON Schema 拡張（`x-ys-*`�
 - [docs/json-schema-conventions.md](./docs/json-schema-conventions.md) — 素の JSON Schema 推奨カタログ
 - [docs/error-condition-ids.md](./docs/error-condition-ids.md) — エラー条件 ID 子集
 - [docs/pack-checklist.md](./docs/pack-checklist.md) — pack 確認（publish しない）
+- [docs/ci-cd.md](./docs/ci-cd.md) — CI / CD（Bパターン）と npm 認証
 - [docs/decisions.md](./docs/decisions.md) — 設計決定ログ
 - [docs/main.md](./docs/main.md) — プロダクト機能メモ
 

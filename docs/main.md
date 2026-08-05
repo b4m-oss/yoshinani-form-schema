@@ -6,6 +6,7 @@
 > - 素 Schema 推奨カタログ: [`json-schema-conventions.md`](./json-schema-conventions.md)
 > - エラー条件 ID 子集: [`error-condition-ids.md`](./error-condition-ids.md)
 > - pack 確認: [`pack-checklist.md`](./pack-checklist.md)
+> - CI/CD: [`ci-cd.md`](./ci-cd.md)
 > - 設計決定ログ: [`decisions.md`](./decisions.md)
 
 ## 大まかな機能
