@@ -1,120 +1,53 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://b4m.co.jp/schemas/yoshinani-form/examples/contact.schema.json",
   "title": "お問い合わせ",
+  "x-ys-version": "0.1.0",
   "type": "object",
-  "required": ["email", "emailConfirm", "name", "message"],
+  "required": ["email", "emailConfirm", "message"],
   "properties": {
     "email": {
       "type": "string",
       "title": "メールアドレス",
       "format": "email",
-      "maxLength": 50,
-      "x-ys-layout": {
-        "order": 1,
-        "width": "half",
-        "section": "contact",
-        "widget": "email"
-      },
-      "x-ys-assist": {
-        "help": "返信先として使用します",
-        "example": "yamada@example.com"
-      },
-      "x-ys-errorMessage": {
+      "x-ys-assist": [
+        "返信先として使用します",
+        "例）yamada@example.com"
+      ],
+      "x-ys-error-messages": {
         "required": "メールアドレスを入力してください",
-        "format": "メールアドレスの形式が正しくありません",
-        "maxLength": "50文字以内で入力してください"
+        "format": "メールアドレスの形式が正しくありません"
       }
     },
     "emailConfirm": {
       "type": "string",
       "title": "メールアドレス（確認）",
       "format": "email",
-      "x-ys-layout": {
-        "order": 2,
-        "width": "half",
-        "section": "contact",
-        "widget": "email"
+      "x-ys-assist": [
+        "確認のため、もう一度入力してください"
+      ],
+      "x-ys-cross-validate": {
+        "targets": ["email"]
       },
-      "x-ys-assist": "確認のため、もう一度入力してください",
-      "x-ys-errorMessage": {
+      "x-ys-error-messages": {
         "required": "確認用メールアドレスを入力してください",
-        "format": "メールアドレスの形式が正しくありません"
-      }
-    },
-    "name": {
-      "type": "string",
-      "title": "お名前",
-      "maxLength": 30,
-      "x-ys-layout": {
-        "order": 3,
-        "width": "full",
-        "section": "contact"
-      },
-      "x-ys-assist": {
-        "tip": "姓名の間にスペースを入れてください",
-        "example": "山田 太郎"
-      },
-      "x-ys-errorMessage": {
-        "required": "お名前を入力してください"
-      }
-    },
-    "companyName": {
-      "type": "string",
-      "title": "企業名",
-      "maxLength": 50,
-      "x-ys-layout": {
-        "order": 4,
-        "width": "full",
-        "section": "contact"
-      },
-      "x-ys-assist": {
-        "help": "個人の場合は空欄で構いません"
-      }
-    },
-    "contactType": {
-      "type": "string",
-      "title": "お問い合わせ内容",
-      "enum": ["product", "recruit", "press", "other"],
-      "x-ys-layout": {
-        "order": 5,
-        "width": "full",
-        "section": "details",
-        "widget": "radio"
-      },
-      "x-ys-assist": "該当するものを1つ選んでください",
-      "x-ys-errorMessage": {
-        "required": "お問い合わせ内容を選択してください"
+        "format": "メールアドレスの形式が正しくありません",
+        "email-match": "メールアドレスが一致しません"
       }
     },
     "message": {
       "type": "string",
-      "title": "お問い合わせ本文",
+      "title": "お問い合わせ内容",
       "maxLength": 1000,
-      "x-ys-layout": {
-        "order": 6,
-        "width": "full",
-        "section": "details",
-        "widget": "textarea",
-        "rowSpan": 8
-      },
-      "x-ys-errorMessage": {
-        "required": "お問い合わせ本文を入力してください",
+      "x-ys-error-messages": {
+        "required": "お問い合わせ内容を入力してください",
         "maxLength": "1000文字以内で入力してください"
       }
     }
   },
-  "x-ys-crossValidation": [
-    {
-      "id": "email-match",
-      "dependsOn": ["email", "emailConfirm"],
-      "targets": ["emailConfirm"],
-      "assert": {
-        "op": "eq",
-        "left": "email",
-        "right": "emailConfirm"
-      },
-      "message": "メールアドレスが一致しません"
-    }
-  ]
+  "x-ys-layout": {
+    "type": "vertical",
+    "legend": "お問い合わせ",
+    "items": ["email", "emailConfirm", "message"]
+  },
+  "additionalProperties": false
 }
