@@ -4,6 +4,8 @@
 > - 機能一覧メモ: [`main.md`](./main.md)
 > - 語彙リファレンス: [`vocabulary.md`](./vocabulary.md)
 > - 素 Schema 推奨カタログ: [`json-schema-conventions.md`](./json-schema-conventions.md)
+> - エラー条件 ID 子集: [`error-condition-ids.md`](./error-condition-ids.md)
+> - pack 確認: [`pack-checklist.md`](./pack-checklist.md)
 
 ## リポジトリ責務
 
