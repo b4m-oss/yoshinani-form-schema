@@ -6,6 +6,13 @@ Yoshinani フォームジェネレータ向けの JSON Schema 拡張（`x-ys-*`�
 
 > English documentation: [README.md](./README.md)
 
+## ドキュメント
+
+- [docs/vocabulary.md](./docs/vocabulary.md) — `x-ys-*` 語彙リファレンス
+- [docs/json-schema-conventions.md](./docs/json-schema-conventions.md) — 素の JSON Schema 推奨カタログ
+- [docs/decisions.md](./docs/decisions.md) — 設計決定ログ
+- [docs/main.md](./docs/main.md) — プロダクト機能メモ
+
 ## インストール
 
 ```bash

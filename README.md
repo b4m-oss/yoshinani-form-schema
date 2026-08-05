@@ -6,6 +6,13 @@ Japanese UX oriented contact / application forms can declare **layout**, **assis
 
 > Japanese documentation: [README_ja.md](./README_ja.md)
 
+## Documentation
+
+- [docs/vocabulary.md](./docs/vocabulary.md) — `x-ys-*` vocabulary reference
+- [docs/json-schema-conventions.md](./docs/json-schema-conventions.md) — plain JSON Schema conventions
+- [docs/decisions.md](./docs/decisions.md) — design decisions
+- [docs/main.md](./docs/main.md) — product feature memo
+
 ## Install
 
 ```bash
