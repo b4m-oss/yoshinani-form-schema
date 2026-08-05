@@ -10,6 +10,7 @@ JSON Schema extensions (`x-ys-*`) for Yoshinani form generators.
 - [docs/json-schema-conventions.md](./docs/json-schema-conventions.md) — plain JSON Schema conventions
 - [docs/error-condition-ids.md](./docs/error-condition-ids.md) — common error condition IDs
 - [docs/pack-checklist.md](./docs/pack-checklist.md) — pack verification (no publish)
+- [docs/ci-cd.md](./docs/ci-cd.md) — CI / CD (B-pattern) and npm auth
 - [docs/decisions.md](./docs/decisions.md) — design decisions
 - [docs/main.md](./docs/main.md) — product feature memo
 

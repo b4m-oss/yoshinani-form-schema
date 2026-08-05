@@ -1,0 +1,97 @@
+name: CD npm publish
+
+# B-pattern:
+# - Tags are created on commits already on main (not on release).
+# - Publish runs on tag push only when that commit is contained in `release`.
+# - Exact tags only: vX.Y.Z (no -rc / +build suffixes).
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+  id-token: write # npm Trusted Publishing (OIDC)
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Validate tag name
+        id: tag
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+          if [[ ! "${TAG}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Skipping publish: tag '${TAG}' is not an exact vX.Y.Z (suffix tags are ignored)."
+            echo "should_publish=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "should_publish=true" >> "$GITHUB_OUTPUT"
+          echo "version=${TAG#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout
+        if: steps.tag.outputs.should_publish == 'true'
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify commit is on release
+        if: steps.tag.outputs.should_publish == 'true'
+        run: |
+          set -euo pipefail
+          git fetch origin release:refs/remotes/origin/release
+          TAG_COMMIT="$(git rev-list -n 1 "${GITHUB_REF_NAME}")"
+          if ! git merge-base --is-ancestor "${TAG_COMMIT}" origin/release; then
+            echo "::error::Tag ${GITHUB_REF_NAME} (${TAG_COMMIT}) is not contained in origin/release. Refusing to publish (B-pattern gate)."
+            exit 1
+          fi
+          echo "Tag commit ${TAG_COMMIT} is on release."
+
+      - name: Setup Node.js
+        if: steps.tag.outputs.should_publish == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          registry-url: https://registry.npmjs.org
+
+      - name: Install
+        if: steps.tag.outputs.should_publish == 'true'
+        run: npm ci
+
+      - name: Verify package.json version matches tag
+        if: steps.tag.outputs.should_publish == 'true'
+        run: |
+          set -euo pipefail
+          PKG_VERSION="$(node -p "require('./package.json').version")"
+          TAG_VERSION="${{ steps.tag.outputs.version }}"
+          if [[ "${PKG_VERSION}" != "${TAG_VERSION}" ]]; then
+            echo "::error::package.json version (${PKG_VERSION}) != tag version (${TAG_VERSION})"
+            exit 1
+          fi
+
+      - name: Test / typecheck / build
+        if: steps.tag.outputs.should_publish == 'true'
+        run: |
+          npm test
+          npm run typecheck
+          npm run build
+
+      - name: Publish to npm
+        if: steps.tag.outputs.should_publish == 'true'
+        env:
+          # Optional fallback when Trusted Publishing is unavailable.
+          # Prefer OIDC Trusted Publishing (id-token: write); leave unset if OIDC is configured.
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [[ -n "${NODE_AUTH_TOKEN:-}" ]]; then
+            echo "Publishing with NPM_TOKEN secret fallback."
+            npm publish --access public
+          else
+            echo "Publishing with Trusted Publishing (OIDC)."
+            npm publish --access public --provenance
+          fi
