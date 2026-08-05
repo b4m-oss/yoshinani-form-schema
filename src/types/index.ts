@@ -1,6 +1,8 @@
 export type {
+  YsAddressLookup,
   YsArray,
   YsAssist,
+  YsCorporateNumberLookup,
   YsCrossValidate,
   YsDisableOnSubmit,
   YsErrorMessages,
@@ -11,6 +13,7 @@ export type {
   YsJsonSchema,
   YsLayout,
   YsLayoutType,
+  YsPostalLookup,
   YsStepNav,
   YsTerms,
   YsTextCount,
