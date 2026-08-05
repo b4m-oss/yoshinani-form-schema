@@ -1,12 +1,12 @@
 import { YS_KEYWORD_LIST, YS_PREFIX, type YsKeyword } from "../constants.js";
 import type {
   YsAssist,
-  YsCrossValidation,
-  YsCrossValidationRule,
-  YsErrorMessage,
+  YsCrossValidate,
+  YsErrorMessages,
   YsExtensions,
   YsJsonSchema,
   YsLayout,
+  YsVersion,
 } from "../types/index.js";
 
 /**
@@ -17,38 +17,42 @@ export function isYsKeyword(key: string): key is YsKeyword | `x-ys-${string}` {
 }
 
 /**
- * Returns true when `key` is one of the well-known Yoshinani keywords.
+ * Returns true when `key` is one of the well-known v0.1.0 keywords.
  */
 export function isKnownYsKeyword(key: string): key is YsKeyword {
   return (YS_KEYWORD_LIST as readonly string[]).includes(key);
 }
 
 /**
- * Pick only `x-ys-*` properties from a schema node.
+ * Pick only known v0.1.0 `x-ys-*` properties from a schema node.
  */
-export function getYsExtensions(schema: YsJsonSchema | null | undefined): YsExtensions {
+export function getYsExtensions(
+  schema: YsJsonSchema | null | undefined,
+): YsExtensions {
   if (!schema || typeof schema !== "object") {
     return {};
   }
 
   const extensions: YsExtensions = {};
 
-  if ("x-ys-layout" in schema && schema["x-ys-layout"] !== undefined) {
+  if (schema["x-ys-version"] !== undefined) {
+    extensions["x-ys-version"] = schema["x-ys-version"] as YsVersion;
+  }
+  if (schema["x-ys-layout"] !== undefined) {
     extensions["x-ys-layout"] = schema["x-ys-layout"] as YsLayout;
   }
-  if ("x-ys-assist" in schema && schema["x-ys-assist"] !== undefined) {
+  if (schema["x-ys-assist"] !== undefined) {
     extensions["x-ys-assist"] = schema["x-ys-assist"] as YsAssist;
   }
-  if ("x-ys-errorMessage" in schema && schema["x-ys-errorMessage"] !== undefined) {
-    extensions["x-ys-errorMessage"] = schema["x-ys-errorMessage"] as YsErrorMessage;
+  if (schema["x-ys-error-messages"] !== undefined) {
+    extensions["x-ys-error-messages"] = schema[
+      "x-ys-error-messages"
+    ] as YsErrorMessages;
   }
-  if (
-    "x-ys-crossValidation" in schema &&
-    schema["x-ys-crossValidation"] !== undefined
-  ) {
-    extensions["x-ys-crossValidation"] = schema[
-      "x-ys-crossValidation"
-    ] as YsCrossValidation;
+  if (schema["x-ys-cross-validate"] !== undefined) {
+    extensions["x-ys-cross-validate"] = schema[
+      "x-ys-cross-validate"
+    ] as YsCrossValidate;
   }
 
   return extensions;
@@ -65,16 +69,4 @@ export function getYsExtension<K extends keyof YsExtensions>(
     return undefined;
   }
   return schema[keyword];
-}
-
-/**
- * Normalize `x-ys-crossValidation` into an array of rules.
- */
-export function normalizeCrossValidation(
-  value: YsCrossValidation | undefined,
-): YsCrossValidationRule[] {
-  if (value == null) {
-    return [];
-  }
-  return Array.isArray(value) ? value : [value];
 }
