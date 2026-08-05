@@ -8,36 +8,34 @@ import {
 } from "./index.js";
 
 describe("constants", () => {
-  it("includes v0.3.0 file/array keywords", () => {
-    expect(YS_VOCABULARY_VERSION).toBe("0.3.0");
-    expect(YS_KEYWORDS.file).toBe("x-ys-file");
-    expect(YS_KEYWORDS.array).toBe("x-ys-array");
-    expect(isKnownYsKeyword("x-ys-file")).toBe(true);
-    expect(isKnownYsKeyword("x-ys-postal-lookup")).toBe(false);
+  it("includes v0.4.0 Japan lookup keywords", () => {
+    expect(YS_VOCABULARY_VERSION).toBe("0.4.0");
+    expect(YS_KEYWORDS.postalLookup).toBe("x-ys-postal-lookup");
+    expect(YS_KEYWORDS.addressLookup).toBe("x-ys-address-lookup");
+    expect(YS_KEYWORDS.corporateNumberLookup).toBe(
+      "x-ys-corporate-number-lookup",
+    );
+    expect(isKnownYsKeyword("x-ys-postal-lookup")).toBe(true);
   });
 });
 
-describe("getYsExtension file/array", () => {
-  it("reads structured input extensions", () => {
-    const participants: YsJsonSchema = {
-      type: "array",
-      minItems: 1,
-      maxItems: 5,
-      "x-ys-array": { dragAndDrop: true },
+describe("japan lookup extensions", () => {
+  it("reads intent flags", () => {
+    const postal: YsJsonSchema = {
+      type: "string",
+      "x-ys-postal-lookup": true,
     };
-    const attachments: YsJsonSchema = {
-      type: "array",
-      maxItems: 3,
-      "x-ys-file": {
-        maxSize: 5242880,
-        accept: ["image/png", "application/pdf"],
-        preview: true,
-      },
+    const address: YsJsonSchema = {
+      type: "string",
+      "x-ys-address-lookup": true,
+    };
+    const corp: YsJsonSchema = {
+      type: "string",
+      "x-ys-corporate-number-lookup": true,
     };
 
-    expect(getYsExtension(participants, "x-ys-array")).toEqual({
-      dragAndDrop: true,
-    });
-    expect(getYsExtension(attachments, "x-ys-file")?.maxSize).toBe(5242880);
+    expect(getYsExtension(postal, "x-ys-postal-lookup")).toBe(true);
+    expect(getYsExtension(address, "x-ys-address-lookup")).toBe(true);
+    expect(getYsExtension(corp, "x-ys-corporate-number-lookup")).toBe(true);
   });
 });

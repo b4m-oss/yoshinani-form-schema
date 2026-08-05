@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "x-ys-address-lookup",
+  "description": "Declares the intent to look up a Japanese postal code from an address.",
+  "type": "boolean"
+}
