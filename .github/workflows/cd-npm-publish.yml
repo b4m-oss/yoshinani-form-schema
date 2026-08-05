@@ -4,6 +4,9 @@ name: CD npm publish
 # - Tags are created on commits already on main (not on release).
 # - Publish runs on tag push only when that commit is contained in `release`.
 # - Exact tags only: vX.Y.Z (no -rc / +build suffixes).
+# Auth:
+# - Prefer npm Trusted Publishing (OIDC, id-token: write).
+# - Optional fallback: repository secret NPM_TOKEN.
 
 on:
   push:
@@ -12,7 +15,7 @@ on:
 
 permissions:
   contents: read
-  id-token: write # npm Trusted Publishing (OIDC)
+  id-token: write # required for npm Trusted Publishing (OIDC)
 
 jobs:
   publish:
@@ -58,6 +61,10 @@ jobs:
           cache: npm
           registry-url: https://registry.npmjs.org
 
+      - name: Ensure modern npm for Trusted Publishing
+        if: steps.tag.outputs.should_publish == 'true'
+        run: npm install -g npm@11
+
       - name: Install
         if: steps.tag.outputs.should_publish == 'true'
         run: npm ci
@@ -80,18 +87,35 @@ jobs:
           npm run typecheck
           npm run build
 
-      - name: Publish to npm
+      - name: Detect auth mode
         if: steps.tag.outputs.should_publish == 'true'
+        id: auth
         env:
-          # Optional fallback when Trusted Publishing is unavailable.
-          # Prefer OIDC Trusted Publishing (id-token: write); leave unset if OIDC is configured.
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          set -euo pipefail
-          if [[ -n "${NODE_AUTH_TOKEN:-}" ]]; then
-            echo "Publishing with NPM_TOKEN secret fallback."
-            npm publish --access public
+          if [[ -n "${NPM_TOKEN:-}" ]]; then
+            echo "mode=token" >> "$GITHUB_OUTPUT"
+            echo "Using NPM_TOKEN secret fallback."
           else
-            echo "Publishing with Trusted Publishing (OIDC)."
-            npm publish --access public --provenance
+            echo "mode=oidc" >> "$GITHUB_OUTPUT"
+            echo "Using Trusted Publishing (OIDC). Ensure npmjs.com Trusted Publisher is configured for this workflow."
           fi
+
+      - name: Publish with Trusted Publishing (OIDC)
+        if: steps.tag.outputs.should_publish == 'true' && steps.auth.outputs.mode == 'oidc'
+        run: |
+          # Do not set NODE_AUTH_TOKEN; empty token in .npmrc can break OIDC.
+          # setup-node may write an auth line; remove token so npm uses OIDC.
+          if [[ -f "${NPM_CONFIG_USERCONFIG:-$HOME/.npmrc}" ]]; then
+            sed -i '/_authToken/d' "${NPM_CONFIG_USERCONFIG:-$HOME/.npmrc}" || true
+          fi
+          if [[ -f .npmrc ]]; then
+            sed -i '/_authToken/d' .npmrc || true
+          fi
+          npm publish --access public --provenance
+
+      - name: Publish with NPM_TOKEN fallback
+        if: steps.tag.outputs.should_publish == 'true' && steps.auth.outputs.mode == 'token'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --access public
