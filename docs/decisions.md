@@ -42,8 +42,8 @@ string[]
 { [conditionId: string]: string } // key は条件ID固定
 
 // x-ys-cross-validate（フィールド）
-// エラーを出す側のフィールドに付与。targets で参照先を指定
-{ targets: string[]; /* 検証本体の詳細形は後続 */ }
+// エラーを出す側のフィールドに付与。検証ロジックはランタイム
+{ targets: string[] }
 ```
 
 ## layout（`x-ys-layout`）
@@ -61,9 +61,9 @@ string[]
 
 - ルート集約ではなく、**各フォーム入力要素に付与**
 - **エラーを出す側**に書く
-- `targets`: 参照・比較する他フィールドの識別子
+- 第一弾の形: `{ targets: string[] }`（**targets のみ**）
+- 検証ロジック自体はランタイムが決める
 - 失敗時はそのフィールドにエラー
-- 検証本体は JSON Schema 再掲方針を基本とする（詳細形は後続）
 - 小さな独自 DSL（`eq` / `requiredIf` 等）は採用しない
 
 ## 日本固有の補完（第一弾）
@@ -79,7 +79,8 @@ API 実装・プロバイダ選択はランタイム責務。
 ## フロー（`x-ys-flow`）
 
 - ルートに画面モデルをまとめる（**screens のみ**）
-- 最小形: `{ screens: { id: string; role: string }[] }`
+- 最小形: `{ screens: { id: string; role: string; [key: string]: unknown }[] }`
+- 各 screen は **`id` + `role` 必須**。それ以外のプロパティは任意（ランタイムが解釈）
 - 画面は固定の「入力 / 確認 / 完了」に限定しない（例: メール確認が挟まる）
 - `role` は利用者が自由に決める文字列（語彙側で列挙しない）
 - 実装タイプの解決はランタイム
@@ -130,7 +131,20 @@ API 実装・プロバイダ選択はランタイム責務。
 
 ## アシストメッセージ（`x-ys-assist`）
 
-- **`string[]`**
+- **`string[]`**（単一言語）
+- i18n / 多言語辞書はランタイム側。schema 内の言語マップは持たない
+
+## 素の JSON Schema 推奨慣例
+
+- 第一弾ドキュメントに **推奨カタログを一枚**書く
+- 例: email は `format: "email"`、複数選択は `array` + `minItems` / `maxItems`、ラジオ/チェックの書き方など
+- カタログの中身の詳細はドキュメント作成時に詰める
+
+## 語彙の識別子 / `$id`
+
+- 第一弾は meta-schema の `$id` を振らない
+- 識別は **`@b4moss/yoshinani-form-schema` + `x-ys-version`** で行う
+- `$id` / 独自 URL は後続で検討
 
 ## 第一弾スコープ（語彙）まとめ
 
