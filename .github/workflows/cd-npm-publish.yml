@@ -10,13 +10,6 @@ on:
   push:
     tags:
       - "v*"
-  # Temporary: diagnose NPM_TOKEN without a full tag/release cycle.
-  workflow_dispatch:
-    inputs:
-      auth_check_only:
-        description: "Only run npm whoami (no publish)"
-        type: boolean
-        default: true
 
 permissions:
   contents: read
@@ -30,24 +23,8 @@ jobs:
       - name: Validate tag name
         id: tag
         run: |
-          if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]]; then
-            echo "tag=" >> "$GITHUB_OUTPUT"
-            echo "version=" >> "$GITHUB_OUTPUT"
-            if [[ "${{ inputs.auth_check_only }}" == "true" ]]; then
-              echo "should_publish=false" >> "$GITHUB_OUTPUT"
-              echo "auth_check=true" >> "$GITHUB_OUTPUT"
-              echo "Manual auth check only (npm whoami)."
-            else
-              echo "should_publish=true" >> "$GITHUB_OUTPUT"
-              echo "auth_check=true" >> "$GITHUB_OUTPUT"
-              echo "Manual publish requested (B-pattern gate skipped)."
-            fi
-            exit 0
-          fi
-
           TAG="${GITHUB_REF_NAME}"
           echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
-          echo "auth_check=false" >> "$GITHUB_OUTPUT"
           if [[ ! "${TAG}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
             echo "Skipping publish: tag '${TAG}' is not an exact vX.Y.Z (suffix tags are ignored)."
             echo "should_publish=false" >> "$GITHUB_OUTPUT"
@@ -57,13 +34,13 @@ jobs:
           echo "version=${TAG#v}" >> "$GITHUB_OUTPUT"
 
       - name: Checkout
-        if: steps.tag.outputs.should_publish == 'true' || steps.tag.outputs.auth_check == 'true'
+        if: steps.tag.outputs.should_publish == 'true'
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: Verify commit is on release
-        if: steps.tag.outputs.should_publish == 'true' && github.event_name != 'workflow_dispatch'
+        if: steps.tag.outputs.should_publish == 'true'
         run: |
           set -euo pipefail
           git fetch origin release:refs/remotes/origin/release
@@ -75,7 +52,7 @@ jobs:
           echo "Tag commit ${TAG_COMMIT} is on release."
 
       - name: Setup Node.js
-        if: steps.tag.outputs.should_publish == 'true' || steps.tag.outputs.auth_check == 'true'
+        if: steps.tag.outputs.should_publish == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: "22"
@@ -87,7 +64,7 @@ jobs:
         run: npm ci
 
       - name: Verify package.json version matches tag
-        if: steps.tag.outputs.should_publish == 'true' && github.event_name != 'workflow_dispatch'
+        if: steps.tag.outputs.should_publish == 'true'
         run: |
           set -euo pipefail
           PKG_VERSION="$(node -p "require('./package.json').version")"
@@ -104,24 +81,14 @@ jobs:
           npm run typecheck
           npm run build
 
-      - name: npm whoami (auth check)
-        if: steps.tag.outputs.should_publish == 'true' || steps.tag.outputs.auth_check == 'true'
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          set -euo pipefail
-          if [[ -z "${NODE_AUTH_TOKEN:-}" ]]; then
-            echo "::error::NPM_TOKEN secret is not set. Add it under Settings → Secrets → Actions (Repository secrets)."
-            exit 1
-          fi
-          echo "NPM_TOKEN length: ${#NODE_AUTH_TOKEN}"
-          echo -n "npm whoami: "
-          npm whoami
-
       - name: Publish to npm
         if: steps.tag.outputs.should_publish == 'true'
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           set -euo pipefail
+          if [[ -z "${NODE_AUTH_TOKEN:-}" ]]; then
+            echo "::error::NPM_TOKEN secret is not set. Add it under Settings → Secrets → Actions (same as hyogen-md / jp-local-gov-id)."
+            exit 1
+          fi
           npm publish --access public --provenance
