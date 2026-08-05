@@ -18,11 +18,33 @@
 - パッケージは `0.1.0` から開始
 - `1.0.0` 到達まではスコープ上 **v1** と名乗ってよい
 - `1.0.0` 到達後、後方互換性が切れたら **v2 / 2.0.0**
+- 各フォーム JSON に語彙バージョン宣言を **必須** とする（例: `x-ys-version`）
+
+## キーワード命名
+
+- **kebab-case**（例: `x-ys-error-messages`, `x-ys-cross-validate`, `x-ys-disable-on-submit`）
 
 ## `x-ys-*` と素の JSON Schema の線引き
 
 - **バリデーションは可能な限り素の JSON Schema**
 - `x-ys-*` は UI・EFO・補完意図・フロー・クロスバリなど、標準で足りない関心だけ
+
+## コア拡張の最小形
+
+```ts
+// x-ys-layout（ルート/グループ）
+{ type?: "vertical" | "horizontal"; legend?: string; items: string[] }
+
+// x-ys-assist（フィールド）
+string[]
+
+// x-ys-error-messages（フィールド）
+{ [conditionId: string]: string } // key は条件ID固定
+
+// x-ys-cross-validate（フィールド）
+// エラーを出す側のフィールドに付与。targets で参照先を指定
+{ targets: string[]; /* 検証本体の詳細形は後続 */ }
+```
 
 ## layout（`x-ys-layout`）
 
@@ -30,91 +52,103 @@
 - ルート（またはグループ）の `x-ys-layout` に集約する
 - フィールド個別には layout を持たない
 - **ネストは当面なし**
-- 形の核:
-  - `type?: "vertical" | "horizontal"`（default: `vertical`）
-  - `legend?: string`（小見出し。なくても OK）
-  - `items: string[]`（各フォーム項目 UI の識別子。当面はプロパティ名）
+- `type?: "vertical" | "horizontal"`（default: `vertical`）
+- `legend?: string`（小見出し。なくても OK）
+- `items: string[]`（各フォーム項目 UI の識別子。当面はプロパティ名）
 - 横並びは成り行きで横幅均等。細かい幅調整は責務外
 
-## 第一弾スコープ（語彙）
+## クロスバリデーション（`x-ys-cross-validate`）
 
-次を第一弾に含める:
-
-- `x-ys-layout`
-- `x-ys-assist`
-- `x-ys-errorMessages`（命名は実装時に最終確定）
-- `x-ys-crossValidation`
-- 日本固有（住所・郵便番号・法人番号など）の **宣言用キーワード**
-- フロー（ステップナビ / 確認 / コンプリート等）
-- ファイル・配列 UI・規約同意・テキストカウント・disableOnSubmit など、下記の方針に沿った語彙
-
-## 日本固有の補完
-
-- schema は **意図の宣言のみ**（例: postal lookup / corporate number lookup）
-- API 実装・プロバイダ選択はランタイム責務
-
-## クロスバリデーション
-
-- **JSON Schema の再掲**で書く（ルート data 向けの追加 schema / `if`-`then` など）
+- ルート集約ではなく、**各フォーム入力要素に付与**
+- **エラーを出す側**に書く
+- `targets`: 参照・比較する他フィールドの識別子
+- 失敗時はそのフィールドにエラー
+- 検証本体は JSON Schema 再掲方針を基本とする（詳細形は後続）
 - 小さな独自 DSL（`eq` / `requiredIf` 等）は採用しない
+
+## 日本固有の補完（第一弾）
+
+意図フラグ中心の最小3つ:
+
+- `x-ys-postal-lookup`
+- `x-ys-address-lookup`
+- `x-ys-corporate-number-lookup`
+
+API 実装・プロバイダ選択はランタイム責務。
 
 ## フロー（`x-ys-flow`）
 
-- ルートにフロー設定をまとめる
-- 画面は固定の「入力 / 確認 / 完了」に限定しない（例: メール確認画面が挟まる）
-- 画面単位は **`id` + `role`**
-- `role` は **利用者が自由に決める文字列**（語彙側で列挙・固定しない）
+- ルートに画面モデルをまとめる（**screens のみ**）
+- 最小形: `{ screens: { id: string; role: string }[] }`
+- 画面は固定の「入力 / 確認 / 完了」に限定しない（例: メール確認が挟まる）
+- `role` は利用者が自由に決める文字列（語彙側で列挙しない）
 - 実装タイプの解決はランタイム
-- ステップナビは「フォーム工程分割」ではなく、確認画面などで使う導線表示
+- ステップナビは工程分割ではなく導線表示
+- **配置は `x-ys-flow` に持たない**
+- 配置は `properties` / `x-ys-layout.items` 側で、`x-ys-step-nav` 等を置いて行う
 
-## ファイルアップロード
+## 利用規約（`x-ys-terms`）
 
-- 寄せられるものは素 Schema（例: `maxItems`）
-- 足りないもの（容量・MIME・プレビュー等）は `x-ys-file` 等の拡張
+- ルートのフォーム全体設定
+- 第一弾は有無中心: `true` または `{ required?: boolean }`
+- 本文 / URL の持ち方は後続
 
-## テキストカウント
+## ファイル・配列・カウント・disabled
 
-- 語彙では **表示 on/off のみ**
-- `maxLength` 等からランタイムが表示を決める
-- 位置や細かい見た目はランタイム責務
+```ts
+"x-ys-file": {
+  maxSize?: number;   // bytes
+  accept?: string[];  // MIME
+  preview?: boolean;
+}
+// 個数は素の minItems / maxItems
 
-## 個数増減フィールド
+"x-ys-array": {
+  dragAndDrop?: boolean;
+}
 
-- 素の `type: "array"` + `items` / `minItems` / `maxItems` を基本とする
-- DnD 可否など UI 差分だけ `x-ys-*`（例: `x-ys-array`）
+"x-ys-text-count": boolean;       // progress の有無はランタイム判断可
+"x-ys-disable-on-submit": boolean;
+```
 
-## 利用規約同意
-
-- **ルートの `x-ys-terms`** としてフォーム全体設定で宣言
-- 送信条件への紐づけはランタイムが解釈
-
-## ボタン disabled
-
-- 語彙に入れる（例: `x-ys-disableOnSubmit`）
-- 個別に宣言可能
-
-## アシストメッセージ
-
-- **`string[]`**
-
-## エラーメッセージ
+## エラーメッセージ（`x-ys-error-messages`）
 
 - 利用者は **文言だけ**変更可能
 - **key（条件 ID）の語彙はユーザー変更不可**
 - key = 条件 ID
-  - 標準条件: JSON Schema の assertion 名（`required` / `maxLength` / `pattern` など）
-  - クロスバリ: rule の `id`
-- 形のイメージ（マップ）:
+  - 標準: JSON Schema assertion 名をそのまま使う（詳細一覧表は後続）
+  - クロスバリ: 対象ルール / フィールド側の id
+- 形はマップ:
 
 ```json
-"x-ys-errorMessages": {
+"x-ys-error-messages": {
   "required": "この項目は必須項目です",
   "maxLength": "最大文字数を超えています",
   "pattern": "正しい記法で書いてください"
 }
 ```
 
-- 自由な別名 key（例: `overMaxLength` → `maxLength`）は採用しない
+## アシストメッセージ（`x-ys-assist`）
+
+- **`string[]`**
+
+## 第一弾スコープ（語彙）まとめ
+
+- `x-ys-version`（必須）
+- `x-ys-layout`
+- `x-ys-assist`
+- `x-ys-error-messages`
+- `x-ys-cross-validate`
+- `x-ys-postal-lookup` / `x-ys-address-lookup` / `x-ys-corporate-number-lookup`
+- `x-ys-flow` / `x-ys-step-nav`
+- `x-ys-terms`
+- `x-ys-file` / `x-ys-array` / `x-ys-text-count` / `x-ys-disable-on-submit`
+
+## 実装進め方
+
+- **docs 先行**
+- 既存スキャフォールド（camelCase・厚い layout 等）のコード再構築は次タスク
+- 決定に合わせて後から src / schemas / examples を作り直す
 
 ## 決定の記録場所
 
