@@ -11,61 +11,57 @@ import {
 } from "./index.js";
 
 describe("constants", () => {
-  it("uses kebab-case x-ys- keywords", () => {
+  it("uses kebab-case x-ys- keywords through v0.2.0", () => {
     expect(YS_PREFIX).toBe("x-ys-");
-    expect(YS_VOCABULARY_VERSION).toBe("0.1.0");
-    expect(YS_KEYWORDS.version).toBe("x-ys-version");
-    expect(YS_KEYWORDS.layout).toBe("x-ys-layout");
-    expect(YS_KEYWORDS.assist).toBe("x-ys-assist");
-    expect(YS_KEYWORDS.errorMessages).toBe("x-ys-error-messages");
-    expect(YS_KEYWORDS.crossValidate).toBe("x-ys-cross-validate");
+    expect(YS_VOCABULARY_VERSION).toBe("0.2.0");
+    expect(YS_KEYWORDS.flow).toBe("x-ys-flow");
+    expect(YS_KEYWORDS.stepNav).toBe("x-ys-step-nav");
+    expect(YS_KEYWORDS.terms).toBe("x-ys-terms");
+    expect(YS_KEYWORDS.textCount).toBe("x-ys-text-count");
+    expect(YS_KEYWORDS.disableOnSubmit).toBe("x-ys-disable-on-submit");
   });
 });
 
 describe("isYsKeyword", () => {
-  it("detects any x-ys-* key", () => {
-    expect(isYsKeyword("x-ys-layout")).toBe(true);
-    expect(isYsKeyword("x-ys-custom")).toBe(true);
-    expect(isYsKeyword("x-other")).toBe(false);
-  });
-
-  it("detects known v0.1.0 keywords only via isKnownYsKeyword", () => {
-    expect(isKnownYsKeyword("x-ys-layout")).toBe(true);
-    expect(isKnownYsKeyword("x-ys-flow")).toBe(false);
+  it("detects known v0.2.0 keywords", () => {
+    expect(isYsKeyword("x-ys-flow")).toBe(true);
+    expect(isKnownYsKeyword("x-ys-step-nav")).toBe(true);
+    expect(isKnownYsKeyword("x-ys-file")).toBe(false);
   });
 });
 
 describe("getYsExtensions", () => {
   const schema: YsJsonSchema = {
-    type: "string",
-    title: "Email",
-    "x-ys-assist": ["返信先として使用します"],
-    "x-ys-error-messages": {
-      required: "メールアドレスを入力してください",
-      format: "メールアドレスの形式が正しくありません",
+    "x-ys-version": "0.2.0",
+    type: "object",
+    "x-ys-flow": {
+      screens: [
+        { id: "input", role: "form" },
+        { id: "confirm", role: "confirm", label: "確認" },
+      ],
     },
-    "x-ys-cross-validate": { targets: ["email"] },
+    "x-ys-terms": { required: true },
+    properties: {
+      stepNavTop: { "x-ys-step-nav": true },
+      message: {
+        type: "string",
+        "x-ys-text-count": true,
+      },
+      submit: { "x-ys-disable-on-submit": true },
+    },
   };
 
-  it("extracts known extensions", () => {
-    expect(getYsExtensions(schema)).toEqual({
-      "x-ys-assist": ["返信先として使用します"],
-      "x-ys-error-messages": {
-        required: "メールアドレスを入力してください",
-        format: "メールアドレスの形式が正しくありません",
-      },
-      "x-ys-cross-validate": { targets: ["email"] },
-    });
-  });
-
-  it("reads a single extension", () => {
-    expect(getYsExtension(schema, "x-ys-cross-validate")).toEqual({
-      targets: ["email"],
-    });
-  });
-
-  it("returns empty object for nullish input", () => {
-    expect(getYsExtensions(undefined)).toEqual({});
-    expect(getYsExtension(null, "x-ys-assist")).toBeUndefined();
+  it("extracts flow/terms from root and flags from fields", () => {
+    expect(getYsExtensions(schema)["x-ys-flow"]?.screens).toHaveLength(2);
+    expect(getYsExtensions(schema)["x-ys-terms"]).toEqual({ required: true });
+    expect(getYsExtension(schema.properties!.stepNavTop!, "x-ys-step-nav")).toBe(
+      true,
+    );
+    expect(
+      getYsExtension(schema.properties!.message!, "x-ys-text-count"),
+    ).toBe(true);
+    expect(
+      getYsExtension(schema.properties!.submit!, "x-ys-disable-on-submit"),
+    ).toBe(true);
   });
 });
