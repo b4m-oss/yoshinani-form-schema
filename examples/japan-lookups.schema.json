@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "日本の住所・法人番号検索",
+  "x-ys-version": "0.4.0",
+  "type": "object",
+  "required": [
+    "postalCode",
+    "prefecture",
+    "city",
+    "addressLine"
+  ],
+  "properties": {
+    "postalCode": {
+      "type": "string",
+      "title": "郵便番号",
+      "pattern": "^[0-9]{7}$",
+      "x-ys-postal-lookup": true,
+      "x-ys-assist": [
+        "ハイフンを除く7桁で入力してください"
+      ],
+      "x-ys-error-messages": {
+        "required": "郵便番号を入力してください",
+        "pattern": "郵便番号はハイフンを除く7桁の数字で入力してください"
+      }
+    },
+    "prefecture": {
+      "type": "string",
+      "title": "都道府県",
+      "minLength": 1,
+      "x-ys-error-messages": {
+        "required": "都道府県を入力してください"
+      }
+    },
+    "city": {
+      "type": "string",
+      "title": "市区町村",
+      "minLength": 1,
+      "x-ys-error-messages": {
+        "required": "市区町村を入力してください"
+      }
+    },
+    "addressLine": {
+      "type": "string",
+      "title": "町名・番地・建物名",
+      "minLength": 1,
+      "x-ys-address-lookup": true,
+      "x-ys-error-messages": {
+        "required": "町名・番地・建物名を入力してください"
+      }
+    },
+    "corporateNumber": {
+      "type": "string",
+      "title": "法人番号（任意）",
+      "pattern": "^[0-9]{13}$",
+      "x-ys-corporate-number-lookup": true,
+      "x-ys-assist": [
+        "13桁の数字で入力してください"
+      ],
+      "x-ys-error-messages": {
+        "pattern": "法人番号は13桁の数字で入力してください"
+      }
+    }
+  },
+  "x-ys-layout": {
+    "type": "vertical",
+    "legend": "住所・法人情報",
+    "items": [
+      "postalCode",
+      "prefecture",
+      "city",
+      "addressLine",
+      "corporateNumber"
+    ]
+  },
+  "additionalProperties": false
+}

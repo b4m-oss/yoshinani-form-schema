@@ -5,6 +5,11 @@ import type { YsDisableOnSubmit } from "./disable-on-submit.js";
 import type { YsErrorMessages } from "./error-messages.js";
 import type { YsFile } from "./file.js";
 import type { YsFlow } from "./flow.js";
+import type {
+  YsAddressLookup,
+  YsCorporateNumberLookup,
+  YsPostalLookup,
+} from "./japan-lookup.js";
 import type { YsLayout } from "./layout.js";
 import type { YsStepNav } from "./step-nav.js";
 import type { YsTerms } from "./terms.js";
@@ -18,6 +23,11 @@ export type { YsDisableOnSubmit } from "./disable-on-submit.js";
 export type { YsErrorMessages } from "./error-messages.js";
 export type { YsFile } from "./file.js";
 export type { YsFlow, YsFlowScreen } from "./flow.js";
+export type {
+  YsAddressLookup,
+  YsCorporateNumberLookup,
+  YsPostalLookup,
+} from "./japan-lookup.js";
 export type { YsLayout, YsLayoutType } from "./layout.js";
 export type { YsStepNav } from "./step-nav.js";
 export type { YsTerms } from "./terms.js";
@@ -25,7 +35,7 @@ export type { YsTextCount } from "./text-count.js";
 export type { YsVersion } from "./version.js";
 
 /**
- * Yoshinani extension bag (through v0.3.0) that may appear on schema nodes.
+ * Yoshinani extension bag (through v0.4.0) that may appear on schema nodes.
  */
 export interface YsExtensions {
   "x-ys-version"?: YsVersion;
@@ -40,6 +50,9 @@ export interface YsExtensions {
   "x-ys-disable-on-submit"?: YsDisableOnSubmit;
   "x-ys-file"?: YsFile;
   "x-ys-array"?: YsArray;
+  "x-ys-postal-lookup"?: YsPostalLookup;
+  "x-ys-address-lookup"?: YsAddressLookup;
+  "x-ys-corporate-number-lookup"?: YsCorporateNumberLookup;
 }
 
 /**

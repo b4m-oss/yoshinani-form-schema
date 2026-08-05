@@ -6,8 +6,10 @@ import {
   type YsKeyword,
 } from "./constants.js";
 import type {
+  YsAddressLookup,
   YsArray,
   YsAssist,
+  YsCorporateNumberLookup,
   YsCrossValidate,
   YsDisableOnSubmit,
   YsErrorMessages,
@@ -18,6 +20,7 @@ import type {
   YsJsonSchema,
   YsLayout,
   YsLayoutType,
+  YsPostalLookup,
   YsStepNav,
   YsTerms,
   YsTextCount,
@@ -42,8 +45,10 @@ export {
 };
 
 export type {
+  YsAddressLookup,
   YsArray,
   YsAssist,
+  YsCorporateNumberLookup,
   YsCrossValidate,
   YsDisableOnSubmit,
   YsErrorMessages,
@@ -55,6 +60,7 @@ export type {
   YsKeyword,
   YsLayout,
   YsLayoutType,
+  YsPostalLookup,
   YsStepNav,
   YsTerms,
   YsTextCount,

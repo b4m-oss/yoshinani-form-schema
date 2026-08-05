@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "x-ys-corporate-number-lookup",
+  "description": "Declares the intent to look up an official company name and address from a Japanese corporate number.",
+  "type": "boolean"
+}

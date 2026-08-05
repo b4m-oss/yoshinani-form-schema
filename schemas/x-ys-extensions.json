@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Yoshinani Form Schema v0.3.0 Core Extensions",
+  "title": "Yoshinani Form Schema v0.4.0 Core Extensions",
   "description": "Documents the Yoshinani core extension properties that may appear alongside JSON Schema keywords.",
   "type": "object",
   "properties": {
@@ -18,6 +18,15 @@
     },
     "x-ys-cross-validate": {
       "$ref": "./x-ys-cross-validate.json"
+    },
+    "x-ys-postal-lookup": {
+      "$ref": "./x-ys-postal-lookup.json"
+    },
+    "x-ys-address-lookup": {
+      "$ref": "./x-ys-address-lookup.json"
+    },
+    "x-ys-corporate-number-lookup": {
+      "$ref": "./x-ys-corporate-number-lookup.json"
     },
     "x-ys-flow": {
       "$ref": "./x-ys-flow.json"
