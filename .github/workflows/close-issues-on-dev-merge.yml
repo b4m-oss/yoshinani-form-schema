@@ -1,0 +1,66 @@
+name: Close issues on dev-* merge
+
+# GitHub only auto-closes "Closes #N" when merging into the default branch.
+# This workflow closes those issues when a PR is merged into a dev-v* branch.
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - "dev-v*"
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: read
+
+jobs:
+  close-linked-issues:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Close issues referenced by closing keywords
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const body = context.payload.pull_request.body || "";
+            const title = context.payload.pull_request.title || "";
+            const text = `${title}\n${body}`;
+            const re = /\b(?:close|closes|closed|fix|fixes|fixed|resolve|resolves|resolved)\s+#(\d+)/gi;
+            const numbers = new Set();
+            for (const match of text.matchAll(re)) {
+              numbers.add(Number(match[1]));
+            }
+            if (numbers.size === 0) {
+              core.info("No closing keywords found.");
+              return;
+            }
+            for (const issue_number of numbers) {
+              const { data: issue } = await github.rest.issues.get({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number,
+              });
+              if (issue.pull_request) {
+                core.info(`#${issue_number} is a pull request; skip.`);
+                continue;
+              }
+              if (issue.state === "closed") {
+                core.info(`#${issue_number} already closed.`);
+                continue;
+              }
+              await github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number,
+                state: "closed",
+                state_reason: "completed",
+              });
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number,
+                body: `Closed by merge of ${context.payload.pull_request.html_url} into \`${context.payload.pull_request.base.ref}\`.`,
+              });
+              core.info(`Closed #${issue_number}.`);
+            }
