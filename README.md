@@ -2,8 +2,6 @@
 
 JSON Schema extensions (`x-ys-*`) for Yoshinani form generators.
 
-Japanese UX oriented contact / application forms can declare **layout**, **assist messages**, **error messages**, and **cross-field validation** alongside standard JSON Schema.
-
 > Japanese documentation: [README_ja.md](./README_ja.md)
 
 ## Documentation
@@ -19,56 +17,51 @@ Japanese UX oriented contact / application forms can declare **layout**, **assis
 npm install @b4moss/yoshinani-form-schema
 ```
 
+> Package publish may lag behind the git vocabulary work. Prefer the docs and `schemas/` in-repo until `0.1.0` is released.
+
 ## Extension prefix
 
-All Yoshinani keywords use the prefix **`x-ys-`**.
+All Yoshinani keywords use **`x-ys-*`** in **kebab-case**.
+
+v0.1.0 core:
 
 | Keyword | Purpose |
 | --- | --- |
-| `x-ys-layout` | Layout / presentation hints (order, width, section, widget, …) |
-| `x-ys-assist` | Non-error guidance (help, tip, example) |
-| `x-ys-errorMessage` | Human-readable messages keyed by validation keyword |
-| `x-ys-crossValidation` | Cross-field validation rules |
+| `x-ys-version` | Required vocabulary SemVer on the form root |
+| `x-ys-layout` | Fieldset layout (`type`, `legend`, `items`) |
+| `x-ys-assist` | Assist messages (`string[]`) |
+| `x-ys-error-messages` | Error copy map keyed by condition IDs |
+| `x-ys-cross-validate` | Cross-field targets on the error-displaying field |
 
 ## Example
 
-```json
-{
-  "type": "string",
-  "title": "メールアドレス",
-  "format": "email",
-  "x-ys-layout": { "order": 1, "width": "half", "widget": "email" },
-  "x-ys-assist": { "help": "返信先として使用します", "example": "yamada@example.com" },
-  "x-ys-errorMessage": {
-    "required": "メールアドレスを入力してください",
-    "format": "メールアドレスの形式が正しくありません"
-  }
-}
-```
-
-See [`examples/contact.schema.json`](./examples/contact.schema.json) for a fuller sample, and [`schemas/x-ys-extensions.json`](./schemas/x-ys-extensions.json) for vocabulary sketches.
-
-## API (TypeScript)
+See [`examples/contact.schema.json`](./examples/contact.schema.json) and [`schemas/`](./schemas/).
 
 ```ts
 import {
   YS_KEYWORDS,
+  YS_VOCABULARY_VERSION,
   getYsExtensions,
-  normalizeCrossValidation,
   type YsJsonSchema,
 } from "@b4moss/yoshinani-form-schema";
 
 const schema: YsJsonSchema = {
+  "x-ys-version": YS_VOCABULARY_VERSION,
   type: "object",
   properties: {
-    email: { type: "string", "x-ys-layout": { width: "half" } },
+    email: {
+      type: "string",
+      "x-ys-assist": ["返信先として使用します"],
+    },
   },
+  "x-ys-layout": { type: "vertical", items: ["email"] },
 };
 
-const extensions = getYsExtensions(schema.properties!.email!);
+const emailExt = getYsExtensions(schema.properties!.email!);
+console.log(YS_KEYWORDS.layout, emailExt);
 ```
 
-This package currently ships **types**, **keyword constants**, and **small helpers**. Runtime form generation / validation engines are out of scope for the scaffold.
+This package ships **types**, **keyword constants**, **small helpers**, and **JSON Schema sketches**. Runtime form engines are out of scope.
 
 ## Development
 

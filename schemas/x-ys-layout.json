@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "x-ys-layout",
+  "description": "Describes the layout of form items on a form root or group.",
+  "type": "object",
+  "required": ["items"],
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": ["vertical", "horizontal"],
+      "default": "vertical"
+    },
+    "legend": {
+      "type": "string"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
+}
