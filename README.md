@@ -1,89 +1,24 @@
-# @b4moss/yoshinani-form-schema
+# yoshinani-form-schema
 
-JSON Schema extensions (`x-ys-*`) for Yoshinani form generators.
+Repository for `@b4moss/yoshinani-form-schema` — JSON Schema extensions (`x-ys-*`) for Yoshinani form generators.
 
-> Japanese documentation: [README_ja.md](./README_ja.md)
+## Layout
 
-## Documentation
-
-- [docs/vocabulary.md](./docs/vocabulary.md) — `x-ys-*` vocabulary reference
-- [docs/json-schema-conventions.md](./docs/json-schema-conventions.md) — plain JSON Schema conventions
-- [docs/error-condition-ids.md](./docs/error-condition-ids.md) — common error condition IDs
-- [docs/pack-checklist.md](./docs/pack-checklist.md) — pack verification (no publish)
-- [docs/ci-cd.md](./docs/ci-cd.md) — CI / CD (B-pattern) and npm auth
-- [docs/npm-auth.md](./docs/npm-auth.md) — `NPM_TOKEN` setup
-- [docs/decisions.md](./docs/decisions.md) — design decisions
-- [docs/main.md](./docs/main.md) — product feature memo
-
-## Install
-
-```bash
-npm install @b4moss/yoshinani-form-schema
-```
-
-> Package publish may lag behind the git vocabulary work. Prefer the docs and `schemas/` in-repo until `0.1.0` is released.
-
-## Extension prefix
-
-All Yoshinani keywords use **`x-ys-*`** in **kebab-case**.
-
-Through v0.5.0:
-
-| Keyword | Purpose |
+| Path | Role |
 | --- | --- |
-| `x-ys-version` | Required vocabulary SemVer on the form root |
-| `x-ys-layout` | Fieldset layout (`type`, `legend`, `items`) |
-| `x-ys-assist` | Assist messages (`string[]`) |
-| `x-ys-error-messages` | Error copy map keyed by condition IDs |
-| `x-ys-cross-validate` | Cross-field targets on the error-displaying field |
-| `x-ys-flow` | Screen model (`screens`: `id` + `role`) |
-| `x-ys-step-nav` | Placeable step navigation flag |
-| `x-ys-terms` | Root terms consent setting |
-| `x-ys-text-count` | Text count display on/off |
-| `x-ys-disable-on-submit` | Disable control after submit |
-| `x-ys-file` | File size / MIME / preview extras |
-| `x-ys-array` | Array UI extras (e.g. drag-and-drop) |
-| `x-ys-postal-lookup` | Postal-code → address lookup intent |
-| `x-ys-address-lookup` | Address → postal-code lookup intent |
-| `x-ys-corporate-number-lookup` | Corporate number → name/address lookup intent |
-
-## Example
-
-See [`examples/contact.schema.json`](./examples/contact.schema.json) and [`schemas/`](./schemas/).
-
-```ts
-import {
-  YS_KEYWORDS,
-  YS_VOCABULARY_VERSION,
-  getYsExtensions,
-  type YsJsonSchema,
-} from "@b4moss/yoshinani-form-schema";
-
-const schema: YsJsonSchema = {
-  "x-ys-version": YS_VOCABULARY_VERSION,
-  type: "object",
-  properties: {
-    email: {
-      type: "string",
-      "x-ys-assist": ["返信先として使用します"],
-    },
-  },
-  "x-ys-layout": { type: "vertical", items: ["email"] },
-};
-
-const emailExt = getYsExtensions(schema.properties!.email!);
-console.log(YS_KEYWORDS.layout, emailExt);
-```
-
-This package ships **types**, **keyword constants**, **small helpers**, and **JSON Schema sketches**. Runtime form engines are out of scope.
+| [`docs/`](./docs/) | Design docs and vocabulary reference |
+| [`packages/yoshinani-form-schema/`](./packages/yoshinani-form-schema/) | Publishable npm package |
 
 ## Development
 
 ```bash
-npm install
-npm test
-npm run build
+make install
+make test
+make build
+make pack-check
 ```
+
+Package details: [`packages/yoshinani-form-schema/README.md`](./packages/yoshinani-form-schema/README.md)
 
 ## License
 

@@ -1,6 +1,6 @@
 {
   "name": "@b4moss/yoshinani-form-schema",
-  "version": "0.5.0",
+  "version": "0.5.2",
   "description": "JSON Schema extensions (x-ys-*) for Yoshinani form generators",
   "type": "module",
   "main": "./dist/yoshinani-form-schema.js",
@@ -14,7 +14,6 @@
   "files": [
     "dist",
     "schemas",
-    "examples",
     "README.md",
     "README_ja.md",
     "LICENSE"
@@ -39,7 +38,8 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/b4m-oss/yoshinani-form-schema.git"
+    "url": "git+https://github.com/b4m-oss/yoshinani-form-schema.git",
+    "directory": "packages/yoshinani-form-schema"
   },
   "bugs": {
     "url": "https://github.com/b4m-oss/yoshinani-form-schema/issues"

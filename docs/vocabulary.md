@@ -9,7 +9,7 @@
 - パッケージ: `@b4moss/yoshinani-form-schema`
 - 拡張接頭詞: `x-ys-*`（**kebab-case**）
 - ベース: JSON Schema **2020-12**
-- 現行語彙バージョン: **`0.5.0`**
+- 現行語彙バージョン: **`0.5.1`**
 - バリデーションは可能な限り素の JSON Schema。`x-ys-*` は標準で足りない関心だけ
 - 識別: パッケージ名 + 必須の `x-ys-version`（meta-schema `$id` は未設定）
 
@@ -17,11 +17,11 @@
 
 | ファイル | 内容 |
 | --- | --- |
-| [`examples/contact.schema.json`](../examples/contact.schema.json) | お問い合わせ（layout / assist / error / cross-validate / flow / step-nav / terms など） |
-| [`examples/structured-inputs.schema.json`](../examples/structured-inputs.schema.json) | 配列・ファイル（`x-ys-array` / `x-ys-file`） |
-| [`examples/japan-lookups.schema.json`](../examples/japan-lookups.schema.json) | 郵便・住所・法人番号 lookup |
+| [`examples/contact.schema.json`](../packages/yoshinani-form-schema/examples/contact.schema.json) | お問い合わせ（layout / assist / error / cross-validate / flow / step-nav / terms など） |
+| [`examples/structured-inputs.schema.json`](../packages/yoshinani-form-schema/examples/structured-inputs.schema.json) | 配列・ファイル（`x-ys-array` / `x-ys-file`） |
+| [`examples/japan-lookups.schema.json`](../packages/yoshinani-form-schema/examples/japan-lookups.schema.json) | 郵便・住所・法人番号 lookup |
 
-スキーマ断片: [`schemas/`](../schemas/)（入口は `x-ys-extensions.json`）。
+スキーマ断片: [`schemas/`](../packages/yoshinani-form-schema/schemas/)（入口は `x-ys-extensions.json`）。
 
 ## 付与場所
 
@@ -36,11 +36,11 @@
 
 - **必須**（ルート）
 - 使用する語彙の SemVer 文字列
-- 例: `"0.5.0"`
+- 例: `"0.5.1"`
 
 ```json
 {
-  "x-ys-version": "0.5.0",
+  "x-ys-version": "0.5.1",
   "type": "object",
   "properties": {}
 }
@@ -315,7 +315,7 @@
 
 ```json
 {
-  "x-ys-version": "0.5.0",
+  "x-ys-version": "0.5.1",
   "type": "object",
   "required": ["email"],
   "properties": {

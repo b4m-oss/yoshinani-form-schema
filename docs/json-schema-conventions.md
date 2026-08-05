@@ -10,9 +10,9 @@
 
 | テーマ | example |
 | --- | --- |
-| お問い合わせ一式 | [`examples/contact.schema.json`](../examples/contact.schema.json) |
-| 配列・ファイル | [`examples/structured-inputs.schema.json`](../examples/structured-inputs.schema.json) |
-| 郵便・住所・法人 | [`examples/japan-lookups.schema.json`](../examples/japan-lookups.schema.json) |
+| お問い合わせ一式 | [`examples/contact.schema.json`](../packages/yoshinani-form-schema/examples/contact.schema.json) |
+| 配列・ファイル | [`examples/structured-inputs.schema.json`](../packages/yoshinani-form-schema/examples/structured-inputs.schema.json) |
+| 郵便・住所・法人 | [`examples/japan-lookups.schema.json`](../packages/yoshinani-form-schema/examples/japan-lookups.schema.json) |
 
 ## 基本方針
 
@@ -221,7 +221,7 @@
 
 - 制約（桁数など）は `pattern` 等の素 Schema
 - 補完の意図だけ `x-ys-postal-lookup` / `x-ys-address-lookup` / `x-ys-corporate-number-lookup`
-- 例: [`examples/japan-lookups.schema.json`](../examples/japan-lookups.schema.json)
+- 例: [`examples/japan-lookups.schema.json`](../packages/yoshinani-form-schema/examples/japan-lookups.schema.json)
 
 ## やらないこと（このカタログの範囲外）
 

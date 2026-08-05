@@ -1,0 +1,71 @@
+# @b4moss/yoshinani-form-schema
+
+JSON Schema extensions (`x-ys-*`) for Yoshinani form generators.
+
+> Japanese documentation: [README_ja.md](./README_ja.md)
+
+## Documentation
+
+Repo-root docs:
+
+- [docs/vocabulary.md](../../docs/vocabulary.md) — `x-ys-*` vocabulary reference
+- [docs/json-schema-conventions.md](../../docs/json-schema-conventions.md) — plain JSON Schema conventions
+- [docs/error-condition-ids.md](../../docs/error-condition-ids.md) — common error condition IDs
+- [docs/pack-checklist.md](../../docs/pack-checklist.md) — pack verification (no publish)
+- [docs/ci-cd.md](../../docs/ci-cd.md) — CI / CD (B-pattern) and npm auth
+- [docs/npm-auth.md](../../docs/npm-auth.md) — `NPM_TOKEN` setup
+- [docs/decisions.md](../../docs/decisions.md) — design decisions
+- [docs/main.md](../../docs/main.md) — product feature memo
+
+## Install
+
+```bash
+npm install @b4moss/yoshinani-form-schema
+```
+
+Vocabulary schemas (2020-12 + `x-ys-*`) ship in [`schemas/`](./schemas/) (entry: `x-ys-extensions.json`), also on jsDelivr:
+
+```text
+https://cdn.jsdelivr.net/npm/@b4moss/yoshinani-form-schema/schemas/x-ys-extensions.json
+```
+
+## Extension prefix
+
+All Yoshinani keywords use **`x-ys-*`** in **kebab-case**.
+
+Through v0.5.1:
+
+| Keyword | Purpose |
+| --- | --- |
+| `x-ys-version` | Required vocabulary SemVer on the form root |
+| `x-ys-layout` | Fieldset layout (`type`, `legend`, `items`) |
+| `x-ys-assist` | Assist messages (`string[]`) |
+| `x-ys-error-messages` | Error copy map keyed by condition IDs |
+| `x-ys-cross-validate` | Cross-field targets on the error-displaying field |
+| `x-ys-flow` | Screen model (`screens`: `id` + `role`) |
+| `x-ys-step-nav` | Placeable step navigation flag |
+| `x-ys-terms` | Root terms consent setting |
+| `x-ys-text-count` | Text count display on/off |
+| `x-ys-disable-on-submit` | Disable control after submit |
+| `x-ys-file` | File size / MIME / preview extras |
+| `x-ys-array` | Array UI extras (e.g. drag-and-drop) |
+| `x-ys-postal-lookup` | Postal-code → address lookup intent |
+| `x-ys-address-lookup` | Address → postal-code lookup intent |
+| `x-ys-corporate-number-lookup` | Corporate number → name/address lookup intent |
+
+This package ships **types**, **keyword constants**, **small helpers**, and **JSON Schema sketches**. Runtime form engines are out of scope.
+
+## Development
+
+From the repository root:
+
+```bash
+make install
+make test
+make build
+make pack-check
+```
+
+## License
+
+MIT © Bicycle for Mind LLC.

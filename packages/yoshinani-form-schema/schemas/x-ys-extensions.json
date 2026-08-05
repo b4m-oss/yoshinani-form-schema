@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Yoshinani Form Schema v0.4.0 Core Extensions",
+  "title": "Yoshinani Form Schema v0.5.1 Core Extensions",
   "description": "Documents the Yoshinani core extension properties that may appear alongside JSON Schema keywords.",
   "type": "object",
   "properties": {

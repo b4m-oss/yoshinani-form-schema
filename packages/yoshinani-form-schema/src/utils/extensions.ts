@@ -27,7 +27,7 @@ export function isYsKeyword(key: string): key is YsKeyword | `x-ys-${string}` {
 }
 
 /**
- * Returns true when `key` is one of the well-known keywords (through v0.5.0).
+ * Returns true when `key` is one of the well-known keywords (through v0.5.1).
  */
 export function isKnownYsKeyword(key: string): key is YsKeyword {
   return (YS_KEYWORD_LIST as readonly string[]).includes(key);

@@ -35,7 +35,7 @@ export type { YsTextCount } from "./text-count.js";
 export type { YsVersion } from "./version.js";
 
 /**
- * Yoshinani extension bag (through v0.5.0) that may appear on schema nodes.
+ * Yoshinani extension bag (through v0.5.1) that may appear on schema nodes.
  */
 export interface YsExtensions {
   "x-ys-version"?: YsVersion;
