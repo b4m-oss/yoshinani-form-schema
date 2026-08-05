@@ -1,10 +1,13 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "お問い合わせ",
-  "x-ys-version": "0.1.0",
+  "x-ys-version": "0.2.0",
   "type": "object",
   "required": ["email", "emailConfirm", "message"],
   "properties": {
+    "stepNavTop": {
+      "x-ys-step-nav": true
+    },
     "email": {
       "type": "string",
       "title": "メールアドレス",
@@ -30,24 +33,47 @@
       },
       "x-ys-error-messages": {
         "required": "確認用メールアドレスを入力してください",
-        "format": "メールアドレスの形式が正しくありません",
-        "email-match": "メールアドレスが一致しません"
+        "format": "メールアドレスの形式が正しくありません"
       }
     },
     "message": {
       "type": "string",
       "title": "お問い合わせ内容",
       "maxLength": 1000,
+      "x-ys-text-count": true,
       "x-ys-error-messages": {
         "required": "お問い合わせ内容を入力してください",
         "maxLength": "1000文字以内で入力してください"
       }
+    },
+    "stepNavBottom": {
+      "x-ys-step-nav": true
+    },
+    "submit": {
+      "x-ys-disable-on-submit": true
     }
   },
   "x-ys-layout": {
     "type": "vertical",
     "legend": "お問い合わせ",
-    "items": ["email", "emailConfirm", "message"]
+    "items": [
+      "stepNavTop",
+      "email",
+      "emailConfirm",
+      "message",
+      "stepNavBottom",
+      "submit"
+    ]
+  },
+  "x-ys-flow": {
+    "screens": [
+      { "id": "input", "role": "form" },
+      { "id": "confirm", "role": "confirm" },
+      { "id": "done", "role": "complete" }
+    ]
+  },
+  "x-ys-terms": {
+    "required": true
   },
   "additionalProperties": false
 }

@@ -2,10 +2,15 @@ import { YS_KEYWORD_LIST, YS_PREFIX, type YsKeyword } from "../constants.js";
 import type {
   YsAssist,
   YsCrossValidate,
+  YsDisableOnSubmit,
   YsErrorMessages,
   YsExtensions,
+  YsFlow,
   YsJsonSchema,
   YsLayout,
+  YsStepNav,
+  YsTerms,
+  YsTextCount,
   YsVersion,
 } from "../types/index.js";
 
@@ -17,14 +22,14 @@ export function isYsKeyword(key: string): key is YsKeyword | `x-ys-${string}` {
 }
 
 /**
- * Returns true when `key` is one of the well-known v0.1.0 keywords.
+ * Returns true when `key` is one of the well-known keywords (through v0.2.0).
  */
 export function isKnownYsKeyword(key: string): key is YsKeyword {
   return (YS_KEYWORD_LIST as readonly string[]).includes(key);
 }
 
 /**
- * Pick only known v0.1.0 `x-ys-*` properties from a schema node.
+ * Pick only known `x-ys-*` properties from a schema node.
  */
 export function getYsExtensions(
   schema: YsJsonSchema | null | undefined,
@@ -53,6 +58,23 @@ export function getYsExtensions(
     extensions["x-ys-cross-validate"] = schema[
       "x-ys-cross-validate"
     ] as YsCrossValidate;
+  }
+  if (schema["x-ys-flow"] !== undefined) {
+    extensions["x-ys-flow"] = schema["x-ys-flow"] as YsFlow;
+  }
+  if (schema["x-ys-step-nav"] !== undefined) {
+    extensions["x-ys-step-nav"] = schema["x-ys-step-nav"] as YsStepNav;
+  }
+  if (schema["x-ys-terms"] !== undefined) {
+    extensions["x-ys-terms"] = schema["x-ys-terms"] as YsTerms;
+  }
+  if (schema["x-ys-text-count"] !== undefined) {
+    extensions["x-ys-text-count"] = schema["x-ys-text-count"] as YsTextCount;
+  }
+  if (schema["x-ys-disable-on-submit"] !== undefined) {
+    extensions["x-ys-disable-on-submit"] = schema[
+      "x-ys-disable-on-submit"
+    ] as YsDisableOnSubmit;
   }
 
   return extensions;
