@@ -1,29 +1,30 @@
 # npm pack 確認メモ（publish しない）
 
-> v0.5.0 マイルストーン用。`npm publish` は行わない。
+> パッケージ実体は `packages/yoshinani-form-schema/`。ルートからは `make pack-check`。
 
 ## 手順
 
 ```bash
-npm test
-npm run build
-npm run typecheck
-npm run pack:check
+make install
+make test
+make build
+make typecheck
+make pack-check
 ```
 
-`pack:check` は `npm pack --dry-run` 相当の内容確認を行う。
+`pack-check` は `npm pack --dry-run` 相当の内容確認を行う。
 
 ## 配布に含めるもの（package.json `files`）
 
-- `dist/`
+- `dist/`（minify 済みビルド）
 - `schemas/`
-- `examples/`
 - `README.md`
 - `README_ja.md`
 - `LICENSE`
 
 ## 含めないもの
 
+- `examples/`（リポジトリ参照用。npm には載せない）
 - `src/`
 - `docs/`（リポジトリ参照。npm パッケージには載せない）
 - `node_modules/`
@@ -31,13 +32,13 @@ npm run pack:check
 
 ## 確認観点
 
-- [x] `npm test` 成功
-- [x] `npm run build` で `dist/yoshinani-form-schema.js` と `dist/index.d.ts` が生成される
-- [x] `npm run typecheck` 成功
-- [x] `npm pack --dry-run` に `dist` / `schemas` / `examples` / README / LICENSE が含まれる
-- [x] `npm pack --dry-run` に `src` / `docs` / テストが入らない
+- [ ] `make test` 成功
+- [ ] `make build` で `dist/yoshinani-form-schema.js` と `dist/index.d.ts` が生成される
+- [ ] `make typecheck` 成功
+- [ ] `make pack-check` に `dist` / `schemas` / README / LICENSE が含まれる
+- [ ] `make pack-check` に `examples` / `src` / `docs` / テストが入らない
 
 ## 補足
 
 - 語彙バージョンは `YS_VOCABULARY_VERSION` / フォーム JSON の `x-ys-version` で識別する
-- 公開判断は PO。このマイルストーンは準備確認まで
+- 公開判断は PO

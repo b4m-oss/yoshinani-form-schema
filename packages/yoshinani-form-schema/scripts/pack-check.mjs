@@ -29,12 +29,18 @@ const mustInclude = [
   "dist/yoshinani-form-schema.js",
   "dist/index.d.ts",
   "schemas/x-ys-extensions.json",
-  "examples/contact.schema.json",
   "README.md",
   "README_ja.md",
   "LICENSE",
 ];
-const mustExclude = ["src/index.ts", "docs/vocabulary.md", "src/index.test.ts"];
+const mustExclude = [
+  "src/index.ts",
+  "docs/vocabulary.md",
+  "src/index.test.ts",
+  "examples/contact.schema.json",
+  "examples/japan-lookups.schema.json",
+  "examples/structured-inputs.schema.json",
+];
 
 for (const item of mustInclude) {
   if (!files.has(item)) {

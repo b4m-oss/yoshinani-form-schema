@@ -15,7 +15,7 @@
 Workflow: [`.github/workflows/ci.yml`](../.github/workflows/ci.yml)
 
 - トリガー: `pull_request` → `develop` / `dev-v*`
-- 実行: `npm ci` → `test` → `typecheck` → `build` → `pack:check`
+- 実行: `packages/yoshinani-form-schema` で `npm ci` → `test` → `typecheck` → `build` → `pack:check`（ルートからは `make …`）
 
 ## CD Bパターン（#38）
 
@@ -26,7 +26,7 @@ Workflow: [`.github/workflows/cd-npm-publish.yml`](../.github/workflows/cd-npm-p
 3. 許可タグ: `^v[0-9]+\.[0-9]+\.[0-9]+$`（例: `v0.5.0`）
 4. **無視**: `v0.5.0-rc.1` など suffix 付き
 5. タグ先コミットが `origin/release` の祖先に含まれない場合は **publish せず失敗**
-6. `package.json` の `version` とタグ（`v` 除去）が一致必須
+6. `packages/yoshinani-form-schema/package.json` の `version` とタグ（`v` 除去）が一致必須
 
 ### 公開までの典型手順
 
