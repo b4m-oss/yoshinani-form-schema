@@ -1,7 +1,9 @@
 import { YS_KEYWORD_LIST, YS_PREFIX, type YsKeyword } from "../constants.js";
 import type {
+  YsAddressLookup,
   YsArray,
   YsAssist,
+  YsCorporateNumberLookup,
   YsCrossValidate,
   YsDisableOnSubmit,
   YsErrorMessages,
@@ -10,6 +12,7 @@ import type {
   YsFlow,
   YsJsonSchema,
   YsLayout,
+  YsPostalLookup,
   YsStepNav,
   YsTerms,
   YsTextCount,
@@ -24,7 +27,7 @@ export function isYsKeyword(key: string): key is YsKeyword | `x-ys-${string}` {
 }
 
 /**
- * Returns true when `key` is one of the well-known keywords (through v0.3.0).
+ * Returns true when `key` is one of the well-known keywords (through v0.4.0).
  */
 export function isKnownYsKeyword(key: string): key is YsKeyword {
   return (YS_KEYWORD_LIST as readonly string[]).includes(key);
@@ -83,6 +86,21 @@ export function getYsExtensions(
   }
   if (schema["x-ys-array"] !== undefined) {
     extensions["x-ys-array"] = schema["x-ys-array"] as YsArray;
+  }
+  if (schema["x-ys-postal-lookup"] !== undefined) {
+    extensions["x-ys-postal-lookup"] = schema[
+      "x-ys-postal-lookup"
+    ] as YsPostalLookup;
+  }
+  if (schema["x-ys-address-lookup"] !== undefined) {
+    extensions["x-ys-address-lookup"] = schema[
+      "x-ys-address-lookup"
+    ] as YsAddressLookup;
+  }
+  if (schema["x-ys-corporate-number-lookup"] !== undefined) {
+    extensions["x-ys-corporate-number-lookup"] = schema[
+      "x-ys-corporate-number-lookup"
+    ] as YsCorporateNumberLookup;
   }
 
   return extensions;
