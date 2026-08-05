@@ -1,15 +1,27 @@
 # Yoshinani Form Schema — 語彙リファレンス
 
-> 人間向けの第一弾仕様。決定ログは [`decisions.md`](./decisions.md)、構想メモは [`main.md`](./main.md)。
+> 人間向けの語彙仕様。決定ログは [`decisions.md`](./decisions.md)、構想メモは [`main.md`](./main.md)。
 > 素の JSON Schema の書き方は [`json-schema-conventions.md`](./json-schema-conventions.md)。
+> エラー条件 ID の子集: [`error-condition-ids.md`](./error-condition-ids.md)。
 
 ## 概要
 
 - パッケージ: `@b4moss/yoshinani-form-schema`
 - 拡張接頭詞: `x-ys-*`（**kebab-case**）
 - ベース: JSON Schema **2020-12**
+- 現行語彙バージョン: **`0.5.0`**
 - バリデーションは可能な限り素の JSON Schema。`x-ys-*` は標準で足りない関心だけ
-- 識別: パッケージ名 + 必須の `x-ys-version`（第一弾は meta-schema `$id` なし）
+- 識別: パッケージ名 + 必須の `x-ys-version`（meta-schema `$id` は未設定）
+
+## 付属 examples
+
+| ファイル | 内容 |
+| --- | --- |
+| [`examples/contact.schema.json`](../examples/contact.schema.json) | お問い合わせ（layout / assist / error / cross-validate / flow / step-nav / terms など） |
+| [`examples/structured-inputs.schema.json`](../examples/structured-inputs.schema.json) | 配列・ファイル（`x-ys-array` / `x-ys-file`） |
+| [`examples/japan-lookups.schema.json`](../examples/japan-lookups.schema.json) | 郵便・住所・法人番号 lookup |
+
+スキーマ断片: [`schemas/`](../schemas/)（入口は `x-ys-extensions.json`）。
 
 ## 付与場所
 
@@ -24,11 +36,11 @@
 
 - **必須**（ルート）
 - 使用する語彙の SemVer 文字列
-- 例: `"0.1.0"`
+- 例: `"0.5.0"`
 
 ```json
 {
-  "x-ys-version": "0.1.0",
+  "x-ys-version": "0.5.0",
   "type": "object",
   "properties": {}
 }
@@ -303,7 +315,7 @@
 
 ```json
 {
-  "x-ys-version": "0.1.0",
+  "x-ys-version": "0.5.0",
   "type": "object",
   "required": ["email"],
   "properties": {

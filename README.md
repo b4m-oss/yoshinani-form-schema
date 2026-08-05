@@ -8,6 +8,8 @@ JSON Schema extensions (`x-ys-*`) for Yoshinani form generators.
 
 - [docs/vocabulary.md](./docs/vocabulary.md) — `x-ys-*` vocabulary reference
 - [docs/json-schema-conventions.md](./docs/json-schema-conventions.md) — plain JSON Schema conventions
+- [docs/error-condition-ids.md](./docs/error-condition-ids.md) — common error condition IDs
+- [docs/pack-checklist.md](./docs/pack-checklist.md) — pack verification (no publish)
 - [docs/decisions.md](./docs/decisions.md) — design decisions
 - [docs/main.md](./docs/main.md) — product feature memo
 
@@ -23,7 +25,7 @@ npm install @b4moss/yoshinani-form-schema
 
 All Yoshinani keywords use **`x-ys-*`** in **kebab-case**.
 
-Through v0.4.0:
+Through v0.5.0:
 
 | Keyword | Purpose |
 | --- | --- |
