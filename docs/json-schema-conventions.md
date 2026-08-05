@@ -2,8 +2,17 @@
 
 > Yoshinani フォーム定義では、バリデーションを可能な限り素の JSON Schema（2020-12）に寄せる。
 > `x-ys-*` は標準で足りない関心だけに使う。語彙本体は [`vocabulary.md`](./vocabulary.md)。
+> エラー条件 ID の子集: [`error-condition-ids.md`](./error-condition-ids.md)。
 
-この文書は第一弾の **推奨慣例** であり、網羅的な JSON Schema 教程ではない。
+この文書は **推奨慣例** であり、網羅的な JSON Schema 教程ではない。
+
+## 付属 examples との対応
+
+| テーマ | example |
+| --- | --- |
+| お問い合わせ一式 | [`examples/contact.schema.json`](../examples/contact.schema.json) |
+| 配列・ファイル | [`examples/structured-inputs.schema.json`](../examples/structured-inputs.schema.json) |
+| 郵便・住所・法人 | [`examples/japan-lookups.schema.json`](../examples/japan-lookups.schema.json) |
 
 ## 基本方針
 
@@ -205,9 +214,14 @@
 ## エラー条件 ID（第一弾の約束）
 
 - JSON Schema の assertion 名を **そのまま** key にする
-- 例: `required`, `type`, `enum`, `const`, `minLength`, `maxLength`, `pattern`, `format`, `minimum`, `maximum`, `minItems`, `maxItems`, `uniqueItems`
-- 完全一覧表は後続
+- よく使う子集の表は [`error-condition-ids.md`](./error-condition-ids.md)
 - クロスバリ由来の ID はランタイム規約に従う
+
+## 日本固有（lookup）
+
+- 制約（桁数など）は `pattern` 等の素 Schema
+- 補完の意図だけ `x-ys-postal-lookup` / `x-ys-address-lookup` / `x-ys-corporate-number-lookup`
+- 例: [`examples/japan-lookups.schema.json`](../examples/japan-lookups.schema.json)
 
 ## やらないこと（このカタログの範囲外）
 
