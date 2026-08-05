@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Structured inputs",
+  "x-ys-version": "0.3.0",
+  "type": "object",
+  "properties": {
+    "teamMembers": {
+      "title": "Team members",
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": ["name"],
+        "additionalProperties": false
+      },
+      "x-ys-array": {
+        "dragAndDrop": true
+      }
+    },
+    "attachments": {
+      "title": "Attachments",
+      "type": "array",
+      "maxItems": 3,
+      "items": {
+        "type": "string"
+      },
+      "x-ys-file": {
+        "maxSize": 5242880,
+        "accept": ["image/png", "image/jpeg", "application/pdf"],
+        "preview": true
+      }
+    }
+  },
+  "x-ys-layout": {
+    "type": "vertical",
+    "items": ["teamMembers", "attachments"]
+  },
+  "additionalProperties": false
+}

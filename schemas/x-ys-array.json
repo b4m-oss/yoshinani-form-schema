@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "x-ys-array",
+  "description": "Configures user interface behavior for an array field.",
+  "type": "object",
+  "properties": {
+    "dragAndDrop": {
+      "type": "boolean",
+      "description": "Controls whether array items can be reordered by drag and drop."
+    }
+  },
+  "additionalProperties": false
+}

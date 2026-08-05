@@ -1,9 +1,11 @@
 export type {
+  YsArray,
   YsAssist,
   YsCrossValidate,
   YsDisableOnSubmit,
   YsErrorMessages,
   YsExtensions,
+  YsFile,
   YsFlow,
   YsFlowScreen,
   YsJsonSchema,

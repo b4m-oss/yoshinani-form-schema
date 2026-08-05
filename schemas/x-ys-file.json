@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "x-ys-file",
+  "description": "Configures file upload behavior for a field.",
+  "type": "object",
+  "properties": {
+    "maxSize": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Maximum size of each file in bytes."
+    },
+    "accept": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Accepted MIME types."
+    },
+    "preview": {
+      "type": "boolean",
+      "description": "Controls whether file previews are displayed."
+    }
+  },
+  "additionalProperties": false
+}

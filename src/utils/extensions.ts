@@ -1,10 +1,12 @@
 import { YS_KEYWORD_LIST, YS_PREFIX, type YsKeyword } from "../constants.js";
 import type {
+  YsArray,
   YsAssist,
   YsCrossValidate,
   YsDisableOnSubmit,
   YsErrorMessages,
   YsExtensions,
+  YsFile,
   YsFlow,
   YsJsonSchema,
   YsLayout,
@@ -22,7 +24,7 @@ export function isYsKeyword(key: string): key is YsKeyword | `x-ys-${string}` {
 }
 
 /**
- * Returns true when `key` is one of the well-known keywords (through v0.2.0).
+ * Returns true when `key` is one of the well-known keywords (through v0.3.0).
  */
 export function isKnownYsKeyword(key: string): key is YsKeyword {
   return (YS_KEYWORD_LIST as readonly string[]).includes(key);
@@ -75,6 +77,12 @@ export function getYsExtensions(
     extensions["x-ys-disable-on-submit"] = schema[
       "x-ys-disable-on-submit"
     ] as YsDisableOnSubmit;
+  }
+  if (schema["x-ys-file"] !== undefined) {
+    extensions["x-ys-file"] = schema["x-ys-file"] as YsFile;
+  }
+  if (schema["x-ys-array"] !== undefined) {
+    extensions["x-ys-array"] = schema["x-ys-array"] as YsArray;
   }
 
   return extensions;

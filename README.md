@@ -23,7 +23,7 @@ npm install @b4moss/yoshinani-form-schema
 
 All Yoshinani keywords use **`x-ys-*`** in **kebab-case**.
 
-Through v0.2.0:
+Through v0.3.0:
 
 | Keyword | Purpose |
 | --- | --- |
@@ -37,6 +37,8 @@ Through v0.2.0:
 | `x-ys-terms` | Root terms consent setting |
 | `x-ys-text-count` | Text count display on/off |
 | `x-ys-disable-on-submit` | Disable control after submit |
+| `x-ys-file` | File size / MIME / preview extras |
+| `x-ys-array` | Array UI extras (e.g. drag-and-drop) |
 
 ## Example
 
