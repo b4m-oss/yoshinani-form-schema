@@ -23,7 +23,7 @@ npm install @b4moss/yoshinani-form-schema
 
 すべての Yoshinani キーワードは **`x-ys-*`**（**kebab-case**）です。
 
-v0.2.0 まで:
+v0.3.0 まで:
 
 | キーワード | 用途 |
 | --- | --- |
@@ -37,6 +37,8 @@ v0.2.0 まで:
 | `x-ys-terms` | ルートの利用規約同意設定 |
 | `x-ys-text-count` | テキストカウント表示 on/off |
 | `x-ys-disable-on-submit` | 送信後 disabled |
+| `x-ys-file` | 容量 / MIME / プレビュー |
+| `x-ys-array` | 配列 UI（DnD など） |
 
 ## 例
 
